@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Torneio Brasileiro Pênaltis 2026</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="game-container">
+
+        <div id="menu" class="screen">
+            <h1 class="title">TORNEIO BRASILEIRO</h1>
+            <p class="subtitle">VERSÃO 2026</p>
+            <button class="btn-primary" onclick="goToTeamSelect()">NOVA CAMPANHA</button>
+            <button class="btn-secondary" onclick="showRanking()">HALL DA FAMA</button>
+            <p style="font-size: 11px; color: #666; margin-top: 20px;">Versão Remasterizada</p>
+        </div>
+
+        <div id="team-select" class="screen" style="display: none;">
+            <h2>ESCOLHA SEU TIME</h2>
+            <div id="teams-scroll">
+                <div id="teams-grid"></div>
+            </div>
+            <button class="btn-secondary" onclick="backToMenu()">VOLTAR</button>
+        </div>
+
+        <div id="role-select" class="screen" style="display: none;">
+            <h2 id="selected-team-display" style="color: #ffeb3b; font-family: 'Russo One';">TIME</h2>
+            <p style="color:#aaa; font-size: 13px; margin-bottom: 20px;">Escolha sua função:</p>
+            <button class="btn-role" onclick="initTournament('player')"><span>⚽</span> ARTILHEIRO</button>
+            <button class="btn-role" onclick="initTournament('keeper')"><span>🧤</span> PAREDÃO</button>
+            <br>
+            <button class="btn-secondary" onclick="backToTeamSelect()">VOLTAR</button>
+        </div>
+
+        <div id="ranking-screen" class="screen" style="display: none;">
+            <h2 style="color: #ffeb3b;">HALL DA FAMA</h2>
+            <div id="ranking-list"
+                style="width: 90%; height: 60%; overflow-y: auto; background: rgba(255,255,255,0.05); border-radius: 8px; padding: 10px;">
+            </div>
+            <button class="btn-secondary" onclick="backToMenu()">VOLTAR</button>
+        </div>
+
+        <div id="tournament-hub" class="screen"
+            style="display: none; justify-content: flex-start; padding-top: 20px; overflow-y: auto;">
+            <h2 id="stage-name" style="color: #ffeb3b; margin-bottom: 10px;">FASE DE GRUPOS</h2>
+
+            <div id="match-info-card">
+                <p style="font-size: 12px; color: #888; margin-bottom: 5px;">SEU PRÓXIMO CONFRONTO</p>
+                <div class="versus-display">
+                    <span id="hub-p1" style="color:#fff">BRA</span>
+                    <span style="color:#555; font-size: 20px;">X</span>
+                    <span id="hub-cpu" style="color:#fff">ARG</span>
+                </div>
+            </div>
+
+            <button class="btn-primary" onclick="startMatchFromHub()" style="margin-bottom: 20px;">JOGAR
+                PARTIDA</button>
+
+            <div id="standings-box" style="width: 90%; display: none;">
+                <h4 style="color: #ccc; font-size: 12px; text-align: left; margin-bottom: 5px;">CLASSIFICAÇÃO DO GRUPO
+                </h4>
+                <table id="standings-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Time</th>
+                            <th>P</th>
+                            <th>V</th>
+                            <th>D</th>
+                        </tr>
+                    </thead>
+                    <tbody id="standings-body"></tbody>
+                </table>
+            </div>
+
+            <div id="bracket-box" style="display:none; width: 90%; margin-bottom: 20px;">
+                <h4 style="color: #ccc; font-size: 12px; text-align: left; margin-bottom: 5px;">CONFRONTOS DA FASE</h4>
+                <div id="bracket-list"></div>
+            </div>
+        </div>
+
+        <div id="game-over" class="screen" style="display: none; background: rgba(20,0,0,0.98);">
+            <h1 style="color: #ff5252; font-size: 40px;">ELIMINADO!</h1>
+            <p id="elimination-reason" style="margin-bottom: 30px; color: #ccc;">Fim da linha.</p>
+            <button class="btn-secondary" onclick="location.reload()">MENU PRINCIPAL</button>
+        </div>
+
+        <div id="champion-screen" class="screen"
+            style="display: none; background: linear-gradient(180deg, #d4af37 0%, #8a6d3b 100%);">
+            <div style="font-size: 80px;">🏆</div>
+            <h1 class="title" style="color: #fff; text-shadow: 2px 2px 0 #000;">CAMPEÃO!</h1>
+            <h2 id="champion-team" style="font-size: 30px; color: #fff; margin-top: 10px; font-family: 'Russo One';">SEU
+                TIME</h2>
+            <p style="margin-top: 20px; font-size: 14px; font-weight: bold;">VOCÊ CONQUISTOU A TAÇA!</p>
+            <button class="btn-primary" style="margin-top: 40px; background: #fff; color: #000;"
+                onclick="location.reload()">JOGAR NOVAMENTE</button>
+        </div>
+
+        <div id="hud" style="display: none;">
+            <div class="placar-box">
+                <div class="team-score" id="score-p1">
+                    <span id="team-name-p1" style="font-size: 12px;">FLA</span>
+                    <span id="gols-p1" class="big-num">0</span>
+                </div>
+                <div class="timer">
+                    <span id="match-stage-hud" style="display:block; margin-bottom:2px; font-size: 9px;">GRUPOS</span>
+                    <span id="round" style="color: #fff; font-weight: bold;">1</span>/5
+                </div>
+                <div class="team-score" id="score-cpu">
+                    <span id="gols-cpu" class="big-num">0</span>
+                    <span id="team-name-cpu" style="font-size: 12px;">PAL</span>
+                </div>
+            </div>
+            <div id="feedback-msg"></div>
+        </div>
+
+        <canvas id="c" width="400" height="800"></canvas>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+
+</html>
