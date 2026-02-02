@@ -3,7 +3,7 @@
 body {
     margin: 0;
     padding: 0;
-    background: #050505;
+    background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -23,13 +23,13 @@ body {
     max-height: 850px;
     background: #000;
     overflow: hidden;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
 }
 
 @media (min-width: 500px) {
     .game-container {
-        border: 2px solid #333;
-        border-radius: 10px;
+        border: 4px solid #333;
+        border-radius: 15px;
         height: 95vh;
     }
 }
@@ -50,7 +50,10 @@ canvas {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(18, 18, 18, 0.98);
+    background: rgba(10, 10, 10, 0.96);
+    background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -63,25 +66,30 @@ canvas {
 /* TIPOGRAFIA E BOTÕES */
 .title {
     font-family: 'Russo One', sans-serif;
-    font-size: 38px;
-    color: #ffeb3b;
-    text-shadow: 3px 3px 0 #006400;
+    font-size: 42px;
+    background: linear-gradient(180deg, #ffeb3b 0%, #f57f17 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0px 4px 0px rgba(0, 0, 0, 0.5));
     margin: 0;
     line-height: 1.1;
+    text-transform: uppercase;
 }
 
 .subtitle {
-    letter-spacing: 4px;
+    letter-spacing: 6px;
     font-size: 14px;
-    color: #ccc;
+    color: #888;
     margin-bottom: 40px;
     text-transform: uppercase;
+    font-weight: bold;
 }
 
 h2 {
     font-family: 'Russo One', sans-serif;
     text-transform: uppercase;
     letter-spacing: 1px;
+    text-shadow: 2px 2px 0 #000;
 }
 
 button {
@@ -89,119 +97,133 @@ button {
     border: none;
     cursor: pointer;
     text-transform: uppercase;
-    transition: transform 0.1s;
+    transition: all 0.1s;
     -webkit-tap-highlight-color: transparent;
+    position: relative;
+    overflow: hidden;
 }
 
 button:active {
-    transform: scale(0.95);
+    transform: scale(0.96) translateY(2px);
 }
 
 .btn-primary {
-    background: linear-gradient(180deg, #00c853 0%, #006400 100%);
+    background: linear-gradient(180deg, #00e676 0%, #00a152 100%);
     color: white;
     padding: 18px 40px;
-    font-size: 20px;
+    font-size: 22px;
     border-radius: 8px;
-    box-shadow: 0 6px 0 #004d00;
+    box-shadow: 0 6px 0 #00600f, 0 10px 10px rgba(0, 0, 0, 0.3);
     width: 85%;
-    margin-bottom: 10px;
-    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+    margin-bottom: 12px;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+    border: 1px solid #4caf50;
 }
 
 .btn-secondary {
-    background: transparent;
+    background: rgba(255, 255, 255, 0.05);
     border: 2px solid #555;
-    color: #aaa;
-    padding: 10px 20px;
+    color: #ccc;
+    padding: 12px 25px;
     margin-top: 15px;
     font-size: 14px;
     border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .btn-role {
-    background: #e0e0e0;
+    background: #f5f5f5;
     color: #222;
     width: 85%;
     padding: 20px;
     margin: 8px 0;
     font-size: 18px;
-    border-radius: 8px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 15px;
     font-weight: bold;
-    box-shadow: 0 4px 0 #999;
+    box-shadow: 0 5px 0 #999;
 }
 
 /* SELEÇÃO DE TIMES */
 #teams-scroll {
     width: 95%;
-    height: 50vh;
+    height: 55vh;
     overflow-y: auto;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
     padding: 10px;
     margin-bottom: 20px;
+    border: 1px solid #333;
 }
 
 #teams-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
+    gap: 10px;
+    padding-bottom: 20px;
 }
 
 .team-card {
-    background: #2a2a2a;
-    padding: 10px 5px;
-    border-radius: 6px;
+    background: linear-gradient(145deg, #2a2a2a, #222);
+    padding: 12px 5px;
+    border-radius: 8px;
     cursor: pointer;
     border: 1px solid #444;
     display: flex;
     flex-direction: column;
     align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    transition: transform 0.1s;
 }
 
 .team-card:active {
-    background: #444;
+    transform: scale(0.95);
     border-color: #ffeb3b;
+    background: #333;
 }
 
 .team-flag {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    margin-bottom: 5px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .team-name-card {
-    font-size: 11px;
-    color: #ddd;
+    font-size: 10px;
+    color: #eee;
     font-weight: bold;
-    white-space: nowrap;
-    overflow: hidden;
-    max-width: 100%;
+    letter-spacing: 0.5px;
 }
 
 /* HUB & TABELA */
 #match-info-card {
-    background: #222;
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    width: 90%;
+    background: linear-gradient(180deg, #252525 0%, #1a1a1a 100%);
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    width: 85%;
     border: 1px solid #444;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
 .versus-display {
     font-family: 'Russo One';
-    font-size: 32px;
+    font-size: 38px;
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 25px;
     align-items: center;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 #standings-table {
@@ -211,67 +233,36 @@ button:active {
     background: #1a1a1a;
     border-radius: 8px;
     overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 #standings-table th {
-    background: #333;
-    padding: 8px;
-    text-align: center;
-    color: #aaa;
-    font-weight: normal;
+    background: #2a2a2a;
+    padding: 10px;
+    color: #888;
+    font-size: 11px;
+    text-transform: uppercase;
 }
 
 #standings-table td {
-    padding: 10px 5px;
-    text-align: center;
-    border-bottom: 1px solid #2a2a2a;
+    padding: 12px 5px;
+    border-bottom: 1px solid #252525;
 }
 
 .row-qualified {
     border-left: 4px solid #00e676;
-    background: rgba(0, 230, 118, 0.05);
+    background: linear-gradient(90deg, rgba(0, 230, 118, 0.1) 0%, transparent 100%);
 }
 
 .row-eliminated {
     border-left: 4px solid #ff5252;
-    opacity: 0.7;
+    opacity: 0.6;
 }
 
-/* CHAVEAMENTO & RANKING */
-#bracket-list {
-    background: #1a1a1a;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.bracket-match {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    border-bottom: 1px solid #333;
-    font-size: 14px;
-}
-
-.bracket-match.player-match {
-    background: rgba(255, 235, 59, 0.1);
-    font-weight: bold;
-    color: #ffeb3b;
-}
-
-.ranking-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 12px;
-    border-bottom: 1px solid #333;
-    font-size: 14px;
-    text-align: left;
-}
-
-/* HUD - AJUSTADO PARA NÃO COBRIR A TORCIDA */
+/* HUD */
 #hud {
     position: absolute;
-    top: 15px;
-    /* DESCIDO PARA DAR ESPAÇO À TORCIDA */
+    top: 10px;
     left: 0;
     width: 100%;
     pointer-events: none;
@@ -282,44 +273,49 @@ button:active {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px);
-    margin: 0 10px;
-    padding: 8px 15px;
-    border-radius: 12px;
-    border-bottom: 2px solid #00c853;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    margin: 0 15px;
+    padding: 10px 20px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
 
 .team-score {
     text-align: center;
     color: #fff;
     font-family: 'Russo One';
-    min-width: 50px;
+    min-width: 60px;
 }
 
 .big-num {
-    font-size: 28px;
+    font-size: 32px;
     display: block;
     line-height: 1;
     color: #ffeb3b;
+    text-shadow: 0 2px 0 #b3a216;
 }
 
 .timer {
-    font-size: 10px;
+    font-size: 11px;
     color: #bbb;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    font-weight: bold;
     text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 4px 10px;
+    border-radius: 4px;
 }
 
 #feedback-msg {
     position: absolute;
-    top: 50%;
+    top: 45%;
     left: 50%;
     transform: translate(-50%, -50%);
     font-family: 'Russo One';
-    font-size: 48px;
-    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+    font-size: 56px;
+    text-shadow: 0 4px 0 #000, 0 0 20px rgba(255, 255, 255, 0.5);
     white-space: nowrap;
     opacity: 0;
     transition: opacity 0.2s, transform 0.2s;

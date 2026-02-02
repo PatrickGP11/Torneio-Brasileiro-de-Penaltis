@@ -22,7 +22,7 @@ const hudEls = {
     feedback: document.getElementById("feedback-msg")
 };
 
-const hubEls = {
+const hubElsDom = { // Renomeado para evitar conflito
     stageName: document.getElementById("stage-name"),
     p1: document.getElementById("hub-p1"),
     cpu: document.getElementById("hub-cpu"),
@@ -36,7 +36,7 @@ const hubEls = {
 const TEAMS = [
     { id: 'fla', name: 'FLA', color1: '#C8102E', color2: '#000000' },
     { id: 'pal', name: 'PAL', color1: '#006437', color2: '#FFFFFF' },
-    { id: 'spfc', name: 'SAO', color1: '#FE0000', color2: '#000000' },
+    { id: 'spfc', name: 'SAO', color1: '#FE0000', color2: '#FFFFFF' },
     { id: 'cor', name: 'COR', color1: '#000000', color2: '#FFFFFF' },
     { id: 'vas', name: 'VAS', color1: '#000000', color2: '#FFFFFF' },
     { id: 'flu', name: 'FLU', color1: '#9F022D', color2: '#00913C' },
@@ -81,7 +81,6 @@ let Tournament = {
     standings: {}
 };
 
-// --- CONTROLE DE LOOP ---
 let animationFrameId;
 
 function stopGameLoop() {
@@ -102,30 +101,27 @@ let feedbackTimer = 0;
 let shakeAmount = 0;
 let aimX = 200;
 let inputActive = false;
+let globalTime = 0; // Para animação da torcida
 
-// --- FUNÇÃO DE FÍSICA CALIBRADA (Velocidade Aumentada Levemente) ---
+// --- FÍSICA CALIBRADA ---
 function getLockedPhysics() {
     let speedY, speedX, margin;
 
     if (Tournament.stage === 'groups') {
-        // FASE DE GRUPOS: Era -5.5, agora -6.5 (Equilibrado)
         speedY = -6.5;
-        speedX = 0.025; // Lateral um pouco mais rápida também
+        speedX = 0.025;
         margin = 85;
     }
     else if (Tournament.stage === 'sf' || Tournament.stage === 'final') {
-        // SEMI E FINAL: Era -8.5, agora -9.5 (Rápido e Desafiador)
         speedY = -9.5;
         speedX = 0.033;
         margin = 30;
     }
     else {
-        // OITAVAS E QUARTAS: Era -7.0, agora -8.0 (Bom ritmo)
         speedY = -8.0;
         speedX = 0.029;
         margin = 55;
     }
-
     return { y: speedY, x: speedX, cpuMargin: margin };
 }
 
@@ -181,9 +177,9 @@ function updateTournamentHub() {
     const myGroup = Tournament.groups[Tournament.groupIndex];
 
     if (Tournament.stage === 'groups') {
-        hubEls.stageName.textContent = `FASE DE GRUPOS - JOGO ${Tournament.groupMatchIndex + 1}/3`;
-        hubEls.standingsBox.style.display = "block";
-        hubEls.bracketBox.style.display = "none";
+        hubElsDom.stageName.textContent = `FASE DE GRUPOS - JOGO ${Tournament.groupMatchIndex + 1}/3`;
+        hubElsDom.standingsBox.style.display = "block";
+        hubElsDom.bracketBox.style.display = "none";
         renderGroupTable(myGroup);
         const opponents = myGroup.filter(t => t.id !== Tournament.playerTeam.id);
         const nextOpponent = opponents[Tournament.groupMatchIndex];
@@ -194,9 +190,9 @@ function updateTournamentHub() {
         if (Tournament.stage === 'qf') stageTitle = "QUARTAS DE FINAL";
         if (Tournament.stage === 'sf') stageTitle = "SEMIFINAL";
         if (Tournament.stage === 'final') stageTitle = "GRANDE FINAL";
-        hubEls.stageName.textContent = stageTitle;
-        hubEls.standingsBox.style.display = "none";
-        hubEls.bracketBox.style.display = "block";
+        hubElsDom.stageName.textContent = stageTitle;
+        hubElsDom.standingsBox.style.display = "none";
+        hubElsDom.bracketBox.style.display = "block";
         renderBracket();
     }
 }
@@ -207,24 +203,24 @@ function renderGroupTable(group) {
         const statsB = Tournament.standings[b.id];
         return (statsB.points - statsA.points) || (statsB.wins - statsA.wins);
     });
-    hubEls.standingsBody.innerHTML = "";
+    hubElsDom.standingsBody.innerHTML = "";
     sorted.forEach((team, index) => {
         const s = Tournament.standings[team.id];
         const tr = document.createElement("tr");
         tr.className = index < 2 ? "row-qualified" : "row-eliminated";
         tr.innerHTML = `<td>${index + 1}</td><td>${team.name}</td><td>${s.points}</td><td>${s.wins}</td><td>${s.losses}</td>`;
-        hubEls.standingsBody.appendChild(tr);
+        hubElsDom.standingsBody.appendChild(tr);
     });
 }
 
 function renderBracket() {
-    hubEls.bracketList.innerHTML = "";
+    hubElsDom.bracketList.innerHTML = "";
     Tournament.bracketMatches.forEach(match => {
         const div = document.createElement("div");
         const isPlayerMatch = (match.t1.id === Tournament.playerTeam.id || match.t2.id === Tournament.playerTeam.id);
         div.className = isPlayerMatch ? "bracket-match player-match" : "bracket-match";
         div.innerHTML = `<span style="color:${match.t1.color1}">${match.t1.name}</span><span class="bracket-vs">X</span><span style="color:${match.t2.color1}">${match.t2.name}</span>`;
-        hubEls.bracketList.appendChild(div);
+        hubElsDom.bracketList.appendChild(div);
         if (isPlayerMatch) setupMatch(match.t1, match.t2);
     });
 }
@@ -232,8 +228,8 @@ function renderBracket() {
 function setupMatch(p1, cpu) {
     if (p1.id !== Tournament.playerTeam.id) { currentMatch.p1 = cpu; currentMatch.cpu = p1; }
     else { currentMatch.p1 = p1; currentMatch.cpu = cpu; }
-    hubEls.p1.textContent = currentMatch.p1.name; hubEls.p1.style.color = currentMatch.p1.color1;
-    hubEls.cpu.textContent = currentMatch.cpu.name; hubEls.cpu.style.color = currentMatch.cpu.color1;
+    hubElsDom.p1.textContent = currentMatch.p1.name; hubElsDom.p1.style.color = currentMatch.p1.color1;
+    hubElsDom.cpu.textContent = currentMatch.cpu.name; hubElsDom.cpu.style.color = currentMatch.cpu.color1;
 }
 
 function startMatchFromHub() {
@@ -309,15 +305,11 @@ c.addEventListener('mousedown', (e) => {
 function shoot() {
     const dx = aimX - ball.x;
     ball.moving = true;
-
-    // FÍSICA TRAVADA - NÃO SOFRERÁ ACELERAÇÃO
     const physics = getLockedPhysics();
-
     ball.vx = dx * physics.x;
     ball.vy = physics.y;
     ball.vz = 0.16;
     ball.curve = dx * 0.00025;
-
     playSound('kick');
 
     if (Tournament.playerRole === 'player') {
@@ -331,22 +323,19 @@ function shoot() {
 
 function cpuShoot() {
     if (ball.moving) return;
-
     const physics = getLockedPhysics();
-
     const target = (CONFIG.goalLeft + physics.cpuMargin) + Math.random() * ((CONFIG.goalRight - physics.cpuMargin) - (CONFIG.goalLeft + physics.cpuMargin));
     const dx = target - ball.x;
-
     ball.moving = true;
     ball.vx = dx * physics.x;
     ball.vy = physics.y;
     ball.vz = 0.16;
     ball.curve = dx * 0.00025;
-
     playSound('kick');
 }
 
 function update() {
+    globalTime++;
     if (gameState === "WAIT_JUIZ") {
         juiz.timer--;
         if (juiz.timer <= 0 && !juiz.whistled) {
@@ -402,7 +391,6 @@ function checkResult() {
 
 function endMatch() {
     stopGameLoop();
-
     const playerWon = currentMatch.scoreP1 > currentMatch.scoreCpu;
     const isDraw = currentMatch.scoreP1 === currentMatch.scoreCpu;
 
@@ -441,7 +429,7 @@ function endGroupStage() {
         group.sort((a, b) => {
             const sa = Tournament.standings[a.id];
             const sb = Tournament.standings[b.id];
-            return sb.points - sa.points || sb.wins - sa.wins;
+            return (sb.points - sa.points) || (sb.wins - sa.wins);
         });
         qualifiedTeams.push(group[0], group[1]);
     });
@@ -482,75 +470,245 @@ function advanceKnockout() {
 function showGameOver(reason) { switchScreen('gameOver'); document.getElementById('elimination-reason').textContent = reason; }
 function showChampionScreen() { switchScreen('champion'); document.getElementById('champion-team').textContent = Tournament.playerTeam.name; playSound('goal'); }
 
+// --- RENDERIZAÇÃO MELHORADA ---
 function draw() {
     ctx.clearRect(0, 0, c.width, c.height);
+
+    // 1. O Campo vem PRIMEIRO (fundo)
     drawField();
+
+    // 2. A Torcida vem EM CIMA do fundo (mas atrás do gol)
+    drawCrowd();
+
+    // 3. Rede e Traves
     drawNet();
-    drawKeeper();
+
+    // 4. Jogadores
+    drawKeeper(); // Goleiro com uniforme
+    drawRef();    // Juiz com uniforme
+
+    // 5. Bola e Sombras
     if (ball.moving || gameState === "WAIT_JUIZ" || gameState === "PLAY") {
         ctx.fillStyle = "rgba(0,0,0,0.3)";
         const shadowScale = ball.scale * 1.2;
-        ctx.beginPath(); ctx.ellipse(ball.x, ball.y + (8 * (1 - ball.scale)), 8 * shadowScale, 4 * shadowScale, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath();
+        ctx.ellipse(ball.x, ball.y + (8 * (1 - ball.scale)), 8 * shadowScale, 4 * shadowScale, 0, 0, Math.PI * 2);
+        ctx.fill();
     }
     drawBall();
+
+    // 6. Mira do jogador
     if (Tournament.playerRole === 'player' && gameState === "PLAY" && !ball.moving && inputActive) {
-        ctx.strokeStyle = "rgba(255,255,255,0.4)";
-        ctx.setLineDash([4, 4]);
+        ctx.strokeStyle = "rgba(255,255,255,0.5)";
+        ctx.lineWidth = 3;
+        ctx.setLineDash([5, 5]);
         ctx.beginPath(); ctx.moveTo(ball.x, ball.y); ctx.lineTo(aimX, CONFIG.goalTop + 20); ctx.stroke(); ctx.setLineDash([]);
-        ctx.fillStyle = "rgba(255,255,255,0.8)"; ctx.beginPath(); ctx.arc(aimX, CONFIG.goalTop + 20, 6, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "rgba(255,255,255,0.9)"; ctx.beginPath(); ctx.arc(aimX, CONFIG.goalTop + 20, 6, 0, Math.PI * 2); ctx.fill();
     }
-    drawRef();
+}
+
+function drawCrowd() {
+    // DESENHAR ARQUIBANCADA (Fundo Escuro)
+    // Para não ficar torcida flutuando na grama, pintamos o topo de cinza
+    ctx.fillStyle = "#1a1a1a";
+    ctx.fillRect(0, 0, c.width, CONFIG.goalTop - 10);
+
+    // Desenha as "pessoas"
+    const rows = 6;
+    const cols = 25;
+    const startY = 70; // Empurrei um pouco para baixo para sair debaixo do placar
+    const spacingX = c.width / cols;
+    const spacingY = 16;
+
+    for (let r = 0; r < rows; r++) {
+        for (let cl = 0; cl < cols; cl++) {
+            // Escolhe time baseado na posição
+            const isP1 = cl < cols / 2;
+            const team = isP1 ? currentMatch.p1 : currentMatch.cpu;
+            const color = Math.random() > 0.5 ? team.color1 : team.color2;
+
+            // Animação de "pulo"
+            let bounce = 0;
+            if (gameState === "RESULT") {
+                // Torcida comemora se for gol
+                bounce = Math.sin(globalTime * 0.5 + cl) * 5;
+            } else {
+                // Movimento ambiente
+                bounce = Math.sin(globalTime * 0.1 + r + cl) * 2;
+            }
+
+            const x = cl * spacingX + 10;
+            const y = startY + r * spacingY + bounce;
+
+            // Desenha "pessoa" (círculo simples)
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(x, y, 5, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
 }
 
 function drawField() {
-    for (let i = 0; i < 12; i++) { ctx.fillStyle = i % 2 === 0 ? "#2e7d32" : "#388e3c"; ctx.fillRect(0, i * (c.height / 12), c.width, c.height / 12); }
-    ctx.strokeStyle = "rgba(255,255,255,0.8)"; ctx.lineWidth = 3;
+    // Gramado
+    for (let i = 0; i < 12; i++) {
+        ctx.fillStyle = i % 2 === 0 ? "#2e7d32" : "#388e3c";
+        ctx.fillRect(0, i * (c.height / 12), c.width, c.height / 12);
+    }
+
+    // Linhas do campo
+    ctx.strokeStyle = "rgba(255,255,255,0.9)";
+    ctx.lineWidth = 4;
+
+    // Grande área
     ctx.strokeRect(40, CONFIG.goalTop, 320, 160);
+    // Pequena área
     ctx.strokeRect(120, CONFIG.goalTop, 160, 60);
+    // Meia lua
     ctx.beginPath(); ctx.arc(200, CONFIG.goalTop + 160, 40, 0, Math.PI, false); ctx.stroke();
-    ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(200, CONFIG.penaltyY, 3, 0, Math.PI * 2); ctx.fill();
+    // Marca do pênalti
+    ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(200, CONFIG.penaltyY, 4, 0, Math.PI * 2); ctx.fill();
 }
 
 function drawNet() {
     const shake = (Math.random() - 0.5) * shakeAmount;
     const l = CONFIG.goalLeft + shake, r = CONFIG.goalRight + shake, t = CONFIG.goalTop, d = 35;
-    ctx.lineWidth = 2; ctx.strokeStyle = "#ccc"; ctx.lineJoin = "round";
-    ctx.beginPath(); ctx.moveTo(l, t); ctx.lineTo(l - 8, t + d); ctx.lineTo(r + 8, t + d); ctx.lineTo(r, t); ctx.stroke();
-    ctx.beginPath(); ctx.lineWidth = 1; ctx.strokeStyle = "rgba(255,255,255,0.2)";
-    for (let i = l; i < r; i += 12) { ctx.moveTo(i, t); ctx.lineTo(i + (i - 200) * 0.1, t + d); }
-    for (let i = 0; i < d; i += 8) { ctx.moveTo(l - (i * 0.2), t + i); ctx.lineTo(r + (i * 0.2), t + i); }
+
+    // Traves
+    ctx.lineWidth = 5; ctx.strokeStyle = "#ddd"; ctx.lineJoin = "round";
+
+    // Fundo da rede (linhas mais finas)
+    ctx.lineWidth = 1; ctx.strokeStyle = "rgba(255,255,255,0.3)";
+
+    // Desenho hexagonal simples da rede
+    const netSpacing = 12;
+    for (let x = l; x < r; x += netSpacing) {
+        ctx.beginPath(); ctx.moveTo(x, t); ctx.lineTo(x + (x - 200) * 0.15, t + d); ctx.stroke();
+    }
+    for (let y = 0; y < d; y += 6) {
+        ctx.beginPath();
+        ctx.moveTo(l - (y * 0.2), t + y);
+        ctx.lineTo(r + (y * 0.2), t + y);
+        ctx.stroke();
+    }
+
+    // Traves principais (re-desenho por cima)
+    ctx.lineWidth = 6; ctx.strokeStyle = "#eee";
+    ctx.beginPath();
+    ctx.moveTo(l, t); ctx.lineTo(r, t); // Travessão
+    ctx.moveTo(l, t); ctx.lineTo(l, t + 600); // Trave Esq
+    ctx.moveTo(r, t); ctx.lineTo(r, t + 600); // Trave Dir
     ctx.stroke();
-    ctx.beginPath(); ctx.lineWidth = 4; ctx.strokeStyle = "#fff";
-    ctx.moveTo(l, t); ctx.lineTo(r, t); ctx.moveTo(l, t); ctx.lineTo(l, t + 600); ctx.moveTo(r, t); ctx.lineTo(r, t + 600); ctx.stroke();
+}
+
+function drawHuman(x, y, color1, color2, scale, isKeeper, animState) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(scale, scale);
+
+    // Rotação para pulo do goleiro
+    if (isKeeper) {
+        if (animState === 'dive_left') ctx.rotate(Math.PI / 3.5);
+        if (animState === 'dive_right') ctx.rotate(-Math.PI / 3.5);
+    }
+
+    // Cabeça
+    ctx.fillStyle = "#d2b48c"; // Pele
+    ctx.beginPath(); ctx.arc(0, -25, 12, 0, Math.PI * 2); ctx.fill();
+
+    // Camisa (Trapézio)
+    ctx.fillStyle = color1;
+    ctx.beginPath();
+    ctx.moveTo(-15, -15); ctx.lineTo(15, -15); // Ombros
+    ctx.lineTo(12, 15); ctx.lineTo(-12, 15); // Cintura
+    ctx.fill();
+
+    // Detalhe camisa
+    ctx.fillStyle = color2;
+    ctx.fillRect(-5, -15, 10, 30);
+
+    // Braços (Mangas + Pele)
+    ctx.fillStyle = color1; // Manga
+    ctx.beginPath(); ctx.arc(-16, -10, 5, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(16, -10, 5, 0, Math.PI * 2); ctx.fill();
+
+    ctx.fillStyle = "#d2b48c"; // Braço Pele
+    // Se for goleiro, braços esticados
+    if (isKeeper && animState !== 'idle') {
+        ctx.fillRect(-22, -25, 6, 20); // Braço Esq cima
+        ctx.fillRect(16, -25, 6, 20);  // Braço Dir cima
+    } else {
+        ctx.fillRect(-20, -10, 6, 20); // Braço Esq baixo
+        ctx.fillRect(14, -10, 6, 20);  // Braço Dir baixo
+    }
+
+    // Luvas (se goleiro)
+    if (isKeeper) {
+        ctx.fillStyle = "#fff";
+        if (animState !== 'idle') {
+            ctx.beginPath(); ctx.arc(-19, -30, 8, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(19, -30, 8, 0, Math.PI * 2); ctx.fill();
+        } else {
+            ctx.beginPath(); ctx.arc(-17, 12, 6, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(17, 12, 6, 0, Math.PI * 2); ctx.fill();
+        }
+    }
+
+    // Calção
+    ctx.fillStyle = color2; // Cor do time 2 ou branco
+    ctx.fillRect(-13, 15, 26, 12);
+
+    // Pernas
+    ctx.fillStyle = "#d2b48c";
+    ctx.fillRect(-11, 27, 8, 15);
+    ctx.fillRect(3, 27, 8, 15);
+
+    // Meias
+    ctx.fillStyle = color1;
+    ctx.fillRect(-11, 35, 8, 10);
+    ctx.fillRect(3, 35, 8, 10);
+
+    // Chuteiras
+    ctx.fillStyle = "#111";
+    ctx.fillRect(-11, 45, 10, 6);
+    ctx.fillRect(3, 45, 10, 6);
+
+    ctx.restore();
 }
 
 function drawKeeper() {
     const activeKeeper = Tournament.playerRole === 'player' ? currentMatch.cpu : currentMatch.p1;
-    ctx.save(); ctx.translate(keeper.x, keeper.y + 10);
-    if (keeper.animState === 'dive_left') ctx.rotate(Math.PI / 4);
-    if (keeper.animState === 'dive_right') ctx.rotate(-Math.PI / 4);
-    ctx.fillStyle = activeKeeper.color1; ctx.fillRect(-14, -10, 28, 24);
-    ctx.fillStyle = activeKeeper.color2; ctx.fillRect(-14, -10, 5, 24);
-    ctx.fillStyle = "#c68642"; ctx.beginPath(); ctx.arc(0, -15, 7, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(-18, 2, 5, 0, Math.PI * 2); ctx.arc(18, 2, 5, 0, Math.PI * 2); ctx.fill();
-    ctx.restore();
+    // Ajuste de posição Y para o desenho do boneco
+    drawHuman(keeper.x, keeper.y + 20, activeKeeper.color1, activeKeeper.color2, 1, true, keeper.animState);
+}
+
+function drawRef() {
+    const rx = 40, ry = CONFIG.penaltyY - 60;
+    // Juiz: Camisa preta, detalhe amarelo, escala menor
+    drawHuman(rx, ry, "#000", "#ffeb3b", 0.7, false, "idle");
 }
 
 function drawBall() {
     if (gameState === "MENU" || gameState === "RESULT" && !ball.moving) return;
-    ctx.save(); ctx.translate(ball.x, ball.y); ctx.scale(ball.scale, ball.scale); ctx.rotate(ball.rotation * Math.PI / 180);
+    ctx.save();
+    ctx.translate(ball.x, ball.y);
+    ctx.scale(ball.scale, ball.scale);
+    ctx.rotate(ball.rotation * Math.PI / 180);
+
+    // Bola base
     ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(0, 0, 10, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = "#111"; ctx.beginPath(); ctx.moveTo(0, -10); ctx.lineTo(4, -5); ctx.lineTo(-4, -5); ctx.fill();
+
+    // Gomos da bola (pentágonos estilizados)
+    ctx.fillStyle = "#111";
+    ctx.beginPath(); ctx.moveTo(0, -10); ctx.lineTo(4, -5); ctx.lineTo(-4, -5); ctx.fill();
     ctx.beginPath(); ctx.moveTo(-9, 2); ctx.lineTo(-5, 7); ctx.lineTo(-2, 2); ctx.fill();
     ctx.beginPath(); ctx.moveTo(9, 2); ctx.lineTo(5, 7); ctx.lineTo(2, 2); ctx.fill();
-    ctx.restore();
-}
 
-function drawRef() {
-    const rx = 30, ry = CONFIG.penaltyY - 50;
-    ctx.fillStyle = "#000"; ctx.fillRect(rx, ry, 15, 30);
-    ctx.fillStyle = "#ffcc80"; ctx.beginPath(); ctx.arc(rx + 7, ry - 5, 6, 0, Math.PI * 2); ctx.fill();
-    if (juiz.ready) { ctx.fillStyle = "#aaa"; ctx.fillRect(rx + 10, ry, 6, 3); }
+    // Brilho
+    ctx.fillStyle = "rgba(255,255,255,0.3)";
+    ctx.beginPath(); ctx.arc(-3, -3, 4, 0, Math.PI * 2); ctx.fill();
+
+    ctx.restore();
 }
 
 const AudioContext = window.AudioContext || window.webkitAudioContext;
