@@ -36,66 +36,62 @@ const hubElsDom = {
     bracketList: document.getElementById("bracket-list")
 };
 
-// --- FUNÇÃO MÁGICA PARA DESTRAVAR IMAGENS ---
+// --- FUNÇÃO DE IMAGEM ---
 function getSafeLogo(url) {
     if (!url) return '';
     const cleanUrl = url.replace(/^https?:\/\//, '');
     return `https://images.weserv.nl/?url=${cleanUrl}&w=120&h=120&output=png&il`;
 }
 
-/* ================= TIMES, ESCUDOS E CORES DA TORCIDA ================= */
-// Mantive os links EXATOS que você forneceu
+/* ================= TIMES, UNIFORMES (LINHA E GOLEIRO) E TORCIDA ================= */
+// keeperColor1: Camisa do Goleiro, keeperColor2: Calção/Detalhes do Goleiro
 const TEAMS = [
     // RIO DE JANEIRO
-    { id: 'fla', name: 'FLA', color1: '#C8102E', color2: '#000000', crowdColors: ['#C8102E', '#000000'], logo: 'https://upload.wikimedia.org/wikipedia/commons/9/93/Flamengo-RJ_%28BRA%29.png' },
-    { id: 'vas', name: 'VAS', color1: '#000000', color2: '#FFFFFF', crowdColors: ['#000000', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/pt/8/8b/EscudoDoVascoDaGama.svg' },
-    { id: 'flu', name: 'FLU', color1: '#9F022D', color2: '#00913C', crowdColors: ['#9F022D', '#00913C', '#FFFFFF'], logo: 'upload.wikimedia.org/wikipedia/commons/a/ad/Fluminense_FC_escudo.png' },
-    { id: 'bot', name: 'BOT', color1: '#000000', color2: '#FFFFFF', crowdColors: ['#000000', '#FFFFFF'], logo: 'upload.wikimedia.org/wikipedia/commons/5/52/Botafogo_de_Futebol_e_Regatas_logo.svg' },
+    { id: 'fla', name: 'FLA', color1: '#C8102E', color2: '#000000', keeperColor1: '#FFFF00', keeperColor2: '#000000', crowdColors: ['#C8102E', '#000000'], logo: 'https://upload.wikimedia.org/wikipedia/commons/9/93/Flamengo-RJ_%28BRA%29.png' },
+    { id: 'vas', name: 'VAS', color1: '#000000', color2: '#FFFFFF', keeperColor1: '#888888', keeperColor2: '#000000', crowdColors: ['#000000', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/pt/8/8b/EscudoDoVascoDaGama.svg' },
+    { id: 'flu', name: 'FLU', color1: '#9F022D', color2: '#00913C', keeperColor1: '#555555', keeperColor2: '#FFFFFF', crowdColors: ['#9F022D', '#00913C', '#FFFFFF'], logo: 'upload.wikimedia.org/wikipedia/commons/a/ad/Fluminense_FC_escudo.png' },
+    { id: 'bot', name: 'BOT', color1: '#000000', color2: '#FFFFFF', keeperColor1: '#800080', keeperColor2: '#FFFFFF', crowdColors: ['#000000', '#FFFFFF'], logo: 'upload.wikimedia.org/wikipedia/commons/5/52/Botafogo_de_Futebol_e_Regatas_logo.svg' },
 
     // SÃO PAULO
-    { id: 'spfc', name: 'SAO', color1: '#FFFFFF', color2: '#000000', crowdColors: ['#FF0000', '#FFFFFF', '#000000'], logo: 'upload.wikimedia.org/wikipedia/commons/6/6f/Brasao_do_Sao_Paulo_Futebol_Clube.svg' },
-    { id: 'pal', name: 'PAL', color1: '#006437', color2: '#FFFFFF', crowdColors: ['#006437', '#FFFFFF'], logo: 'upload.wikimedia.org/wikipedia/commons/1/10/Palmeiras_logo.svg' },
-    { id: 'cor', name: 'COR', color1: '#FFFFFF', color2: '#000000', crowdColors: ['#FFFFFF', '#000000'], logo: 'https://upload.wikimedia.org/wikipedia/pt/b/b4/Corinthians_simbolo.png' },
-    { id: 'san', name: 'SAN', color1: '#FFFFFF', color2: '#000000', crowdColors: ['#FFFFFF', '#000000'], logo: 'upload.wikimedia.org/wikipedia/commons/3/35/Santos_logo.svg' },
-    { id: 'bGT', name: 'RBB', color1: '#FFFFFF', color2: '#D30F15', crowdColors: ['#D30F15', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/pt/9/9e/RedBullBragantino.png' },
-    { id: 'pon', name: 'PON', color1: '#000000', color2: '#FFFFFF', crowdColors: ['#000000', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/b/bd/Associa%C3%A7%C3%A3o_Atl%C3%A9tica_Ponte_Preta_logo.png' },
-    { id: 'gua', name: 'GUA', color1: '#038E46', color2: '#FFFFFF', crowdColors: ['#038E46', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/e/ec/Guarani_FC_-_SP.svg' },
-
+    { id: 'spfc', name: 'SAO', color1: '#FFFFFF', color2: '#000000', keeperColor1: '#111111', keeperColor2: '#FF0000', crowdColors: ['#FF0000', '#FFFFFF', '#000000'], logo: 'upload.wikimedia.org/wikipedia/commons/6/6f/Brasao_do_Sao_Paulo_Futebol_Clube.svg' }, // Goleiro Preto (Ceni)
+    { id: 'pal', name: 'PAL', color1: '#006437', color2: '#FFFFFF', keeperColor1: '#0000FF', keeperColor2: '#FFFFFF', crowdColors: ['#006437', '#FFFFFF'], logo: 'upload.wikimedia.org/wikipedia/commons/1/10/Palmeiras_logo.svg' },
+    { id: 'cor', name: 'COR', color1: '#FFFFFF', color2: '#000000', keeperColor1: '#FF8C00', keeperColor2: '#000000', crowdColors: ['#FFFFFF', '#000000'], logo: 'https://upload.wikimedia.org/wikipedia/pt/b/b4/Corinthians_simbolo.png' },
+    { id: 'san', name: 'SAN', color1: '#FFFFFF', color2: '#000000', keeperColor1: '#00FF7F', keeperColor2: '#000000', crowdColors: ['#FFFFFF', '#000000'], logo: 'upload.wikimedia.org/wikipedia/commons/3/35/Santos_logo.svg' },
+    { id: 'bGT', name: 'RBB', color1: '#FFFFFF', color2: '#D30F15', keeperColor1: '#FFFF00', keeperColor2: '#000000', crowdColors: ['#D30F15', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/pt/9/9e/RedBullBragantino.png' },
+    { id: 'pon', name: 'PON', color1: '#000000', color2: '#FFFFFF', keeperColor1: '#CCCCCC', keeperColor2: '#000000', crowdColors: ['#000000', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/b/bd/Associa%C3%A7%C3%A3o_Atl%C3%A9tica_Ponte_Preta_logo.png' },
+    { id: 'gua', name: 'GUA', color1: '#038E46', color2: '#FFFFFF', keeperColor1: '#0000FF', keeperColor2: '#FFFFFF', crowdColors: ['#038E46', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/e/ec/Guarani_FC_-_SP.svg' },
+    
     // RIO GRANDE DO SUL
-    { id: 'gre', name: 'GRE', color1: '#0D80BF', color2: '#000000', crowdColors: ['#0D80BF', '#000000', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/0/08/Gremio_logo.svg' },
-    { id: 'int', name: 'INT', color1: '#E30613', color2: '#FFFFFF', crowdColors: ['#E30613', '#FFFFFF'], logo: 'upload.wikimedia.org/wikipedia/commons/f/f1/Escudo_do_Sport_Club_Internacional.svg' },
-    { id: 'juv', name: 'JUV', color1: '#3cff00b6', color2: '#FFFFFF', crowdColors: ['#3cff00b6', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/5/51/EC_Juventude.svg' },
+    { id: 'gre', name: 'GRE', color1: '#0D80BF', color2: '#000000', keeperColor1: '#000000', keeperColor2: '#FFFFFF', crowdColors: ['#0D80BF', '#000000', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/0/08/Gremio_logo.svg' },
+    { id: 'int', name: 'INT', color1: '#E30613', color2: '#FFFFFF', keeperColor1: '#FFFF00', keeperColor2: '#000000', crowdColors: ['#E30613', '#FFFFFF'], logo: 'upload.wikimedia.org/wikipedia/commons/f/f1/Escudo_do_Sport_Club_Internacional.svg' },
+    { id: 'juv', name: 'JUV', color1: '#3cff00b6', color2: '#FFFFFF', keeperColor1: '#FF00FF', keeperColor2: '#000000', crowdColors: ['#3cff00b6', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/5/51/EC_Juventude.svg' },
 
     // MINAS GERAIS
-    { id: 'cam', name: 'CAM', color1: '#000000', color2: '#FFFFFF', crowdColors: ['#000000', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/2/27/Clube_Atl%C3%A9tico_Mineiro_logo.svg' },
-    { id: 'cru', name: 'CRU', color1: '#0054A6', color2: '#FFFFFF', crowdColors: ['#0054A6', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/9/90/Cruzeiro_Esporte_Clube_%28logo%29.svg' },
-    { id: 'ame', name: 'AME', color1: '#000000', color2: '#038E46', crowdColors: ['#038E46', '#000000'], logo: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Escudo_do_America_Futebol_Clube.svg' },
+    { id: 'cam', name: 'CAM', color1: '#000000', color2: '#FFFFFF', keeperColor1: '#FFA500', keeperColor2: '#000000', crowdColors: ['#000000', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/2/27/Clube_Atl%C3%A9tico_Mineiro_logo.svg' },
+    { id: 'cru', name: 'CRU', color1: '#0054A6', color2: '#FFFFFF', keeperColor1: '#FFFF00', keeperColor2: '#0054A6', crowdColors: ['#0054A6', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/9/90/Cruzeiro_Esporte_Clube_%28logo%29.svg' },
+    { id: 'ame', name: 'AME', color1: '#000000', color2: '#038E46', keeperColor1: '#FF0000', keeperColor2: '#FFFFFF', crowdColors: ['#038E46', '#000000'], logo: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Escudo_do_America_Futebol_Clube.svg' },
 
     // NORDESTE
-    { id: 'bah', name: 'BAH', color1: '#FFFFFF', color2: '#003194', crowdColors: ['#003194', '#FF0000', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/pt/9/90/ECBahia.png' },
-    { id: 'vit', name: 'VIT', color1: '#E61812', color2: '#000000', crowdColors: ['#E61812', '#000000'], logo: 'https://upload.wikimedia.org/wikipedia/commons/1/15/Esporte_Clube_Vit%C3%B3ria_%282024%29.svg' },
-    { id: 'for', name: 'FOR', color1: '#115EAC', color2: '#E61812', crowdColors: ['#115EAC', '#E61812', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/4/40/FortalezaEsporteClube.svg' },
-    { id: 'cea', name: 'CEA', color1: '#000000', color2: '#FFFFFF', crowdColors: ['#000000', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/3/38/Cear%C3%A1_Sporting_Club_logo.svg' },
-    { id: 'spo', name: 'SPO', color1: '#000000', color2: '#E30613', crowdColors: ['#000000', '#E30613'], logo: 'https://upload.wikimedia.org/wikipedia/pt/1/17/Sport_Club_do_Recife.png' },
-
-    // PARANÁ
-    { id: 'cap', name: 'CAP', color1: '#E61812', color2: '#000000', crowdColors: ['#E61812', '#000000'], logo: 'https://upload.wikimedia.org/wikipedia/commons/4/43/Athletico_Paranaense_%28Logo_2019%29.svg' },
-    { id: 'cfc', name: 'CFC', color1: '#FFFFFF', color2: '#005334', crowdColors: ['#005334', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/b/bd/Coritiba_Foot_Ball_Club_logo.svg' },
-
-    // GOIÁS
-    { id: 'goi', name: 'GOI', color1: '#005F36', color2: '#FFFFFF', crowdColors: ['#005F36', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/4/4a/Goi%C3%A1s_Esporte_Clube_logo.svg' },
-    { id: 'vil', name: 'VIL', color1: '#E30613', color2: '#FFFFFF', crowdColors: ['#E30613', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/c/c3/Vila_Nova_Logo_Oficial.svg' },
+    { id: 'bah', name: 'BAH', color1: '#FFFFFF', color2: '#003194', keeperColor1: '#FF0000', keeperColor2: '#000000', crowdColors: ['#003194', '#FF0000', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/pt/9/90/ECBahia.png' },
+    { id: 'vit', name: 'VIT', color1: '#E61812', color2: '#000000', keeperColor1: '#00FF00', keeperColor2: '#000000', crowdColors: ['#E61812', '#000000'], logo: 'https://upload.wikimedia.org/wikipedia/commons/1/15/Esporte_Clube_Vit%C3%B3ria_%282024%29.svg' },
+    { id: 'for', name: 'FOR', color1: '#115EAC', color2: '#E61812', keeperColor1: '#FFFF00', keeperColor2: '#000000', crowdColors: ['#115EAC', '#E61812', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/4/40/FortalezaEsporteClube.svg' },
+    { id: 'cea', name: 'CEA', color1: '#000000', color2: '#FFFFFF', keeperColor1: '#800000', keeperColor2: '#FFFFFF', crowdColors: ['#000000', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/3/38/Cear%C3%A1_Sporting_Club_logo.svg' },
+    { id: 'spo', name: 'SPO', color1: '#000000', color2: '#E30613', keeperColor1: '#FFFF00', keeperColor2: '#000000', crowdColors: ['#000000', '#E30613'], logo: 'https://upload.wikimedia.org/wikipedia/pt/1/17/Sport_Club_do_Recife.png' },
 
     // OUTROS
-    { id: 'cui', name: 'CUI', color1: '#018036', color2: '#FDE900', crowdColors: ['#018036', '#FDE900'], logo: 'https://upload.wikimedia.org/wikipedia/commons/8/82/Cuiab%C3%A1_EC.svg' },
-    { id: 'ava', name: 'AVA', color1: '#00679A', color2: '#FFFFFF', crowdColors: ['#00679A', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/8/8c/Ava%C3%AD_Futebol_Clube_logo.svg' },
-    { id: 'fig', name: 'FIG', color1: '#000000', color2: '#FFFFFF', crowdColors: ['#000000', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/pt/7/7b/Figueirense.png' },
-    { id: 'cha', name: 'CHA', color1: '#009B3A', color2: '#FFFFFF', crowdColors: ['#009B3A', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/pt/b/bc/Escudo_de_2018_da_Chapecoense.png' },
-    { id: 'cri', name: 'CRI', color1: '#FDD116', color2: '#000000', crowdColors: ['#FDD116', '#000000', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/6/65/Crici%C3%BAma_Esporte_Clube_logo_%28until_2025%29.svg' },
-    { id: 'pay', name: 'PAY', color1: '#0091CF', color2: '#FFFFFF', crowdColors: ['#0091CF', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/pt/6/6c/Paysandu_SC.png' }
+    { id: 'cap', name: 'CAP', color1: '#E61812', color2: '#000000', keeperColor1: '#333333', keeperColor2: '#FFFFFF', crowdColors: ['#E61812', '#000000'], logo: 'https://upload.wikimedia.org/wikipedia/commons/4/43/Athletico_Paranaense_%28Logo_2019%29.svg' },
+    { id: 'cfc', name: 'CFC', color1: '#FFFFFF', color2: '#005334', keeperColor1: '#FFFF00', keeperColor2: '#005334', crowdColors: ['#005334', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/b/bd/Coritiba_Foot_Ball_Club_logo.svg' },
+    { id: 'goi', name: 'GOI', color1: '#005F36', color2: '#FFFFFF', keeperColor1: '#000000', keeperColor2: '#FFFFFF', crowdColors: ['#005F36', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/4/4a/Goi%C3%A1s_Esporte_Clube_logo.svg' },
+    { id: 'vil', name: 'VIL', color1: '#E30613', color2: '#FFFFFF', keeperColor1: '#0000FF', keeperColor2: '#FFFFFF', crowdColors: ['#E30613', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/c/c3/Vila_Nova_Logo_Oficial.svg' },
+    { id: 'cui', name: 'CUI', color1: '#018036', color2: '#FDE900', keeperColor1: '#000000', keeperColor2: '#FDE900', crowdColors: ['#018036', '#FDE900'], logo: 'https://upload.wikimedia.org/wikipedia/commons/8/82/Cuiab%C3%A1_EC.svg' },
+    { id: 'ava', name: 'AVA', color1: '#00679A', color2: '#FFFFFF', keeperColor1: '#FFFF00', keeperColor2: '#00679A', crowdColors: ['#00679A', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/8/8c/Ava%C3%AD_Futebol_Clube_logo.svg' },
+    { id: 'fig', name: 'FIG', color1: '#000000', color2: '#FFFFFF', keeperColor1: '#FF7F50', keeperColor2: '#000000', crowdColors: ['#000000', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/pt/7/7b/Figueirense.png' },
+    { id: 'cha', name: 'CHA', color1: '#009B3A', color2: '#FFFFFF', keeperColor1: '#000000', keeperColor2: '#009B3A', crowdColors: ['#009B3A', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/pt/b/bc/Escudo_de_2018_da_Chapecoense.png' },
+    { id: 'cri', name: 'CRI', color1: '#FDD116', color2: '#000000', keeperColor1: '#FFFFFF', keeperColor2: '#000000', crowdColors: ['#FDD116', '#000000', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/6/65/Crici%C3%BAma_Esporte_Clube_logo_%28until_2025%29.svg' },
+    { id: 'pay', name: 'PAY', color1: '#0091CF', color2: '#FFFFFF', keeperColor1: '#000000', keeperColor2: '#0091CF', crowdColors: ['#0091CF', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/pt/6/6c/Paysandu_SC.png' }
 ];
 
-/* ================= LÓGICA DO TORNEIO ================= */
+/* ================= LÓGICA DO JOGO ================= */
 let Tournament = {
     active: false,
     playerTeam: null,
@@ -117,8 +113,7 @@ function stopGameLoop() {
     }
 }
 
-// --- FÍSICA E CONFIGURAÇÕES ---
-let currentMatch = { p1: null, cpu: null, scoreP1: 0, scoreCpu: 0, round: 1, finished: false, roundWinner: null }; // Adicionado roundWinner
+let currentMatch = { p1: null, cpu: null, scoreP1: 0, scoreCpu: 0, round: 1, finished: false, roundWinner: null };
 const CONFIG = { goalLeft: 60, goalRight: 340, goalTop: 190, penaltyY: 550 };
 let gameState = "MENU";
 let ball = { x: 200, y: CONFIG.penaltyY, z: 0, vx: 0, vy: 0, vz: 0, curve: 0, scale: 1, moving: false, rotation: 0 };
@@ -149,7 +144,6 @@ function goToTeamSelect() { renderTeamGrid(); switchScreen('teamSelect'); }
 function backToMenu() { switchScreen('menu'); }
 function backToTeamSelect() { switchScreen('teamSelect'); }
 
-// --- RENDERIZAÇÃO DA SELEÇÃO ---
 function renderTeamGrid() {
     const grid = document.getElementById('teams-grid');
     grid.innerHTML = '';
@@ -404,24 +398,25 @@ function checkResult() {
     else if (save) { result = "DEFESA"; showFeedback("DEFENDEU!", "#ff9800"); playSound('save'); }
     else { result = "GOL"; showFeedback("GOOOOL!", "#ffeb3b"); shakeAmount = 20; playSound('goal'); }
 
-    // --- LÓGICA DE VIBRAÇÃO DA TORCIDA ---
+    // --- LÓGICA DE VIBRAÇÃO DA TORCIDA (CORRIGIDA) ---
+    // Quem ganha a "rodada" vibra.
     if (Tournament.playerRole === 'player') {
-        // MODO ARTILHEIRO
+        // MODO ARTILHEIRO (Você chuta)
         if (result === "GOL") {
             currentMatch.scoreP1++;
-            currentMatch.roundWinner = 'p1'; // Player Fez gol (Sua torcida vibra)
+            currentMatch.roundWinner = 'p1'; // Você fez gol -> Sua torcida vibra
         } else {
             currentMatch.scoreCpu++;
-            currentMatch.roundWinner = 'cpu'; // CPU defendeu (Torcida adversária vibra)
+            currentMatch.roundWinner = 'cpu'; // Goleiro pegou/Fora -> Torcida adversária vibra
         }
     } else {
-        // MODO PAREDÃO (GOLEIRO)
+        // MODO PAREDÃO (Você defende)
         if (result === "DEFESA" || result === "FORA") {
             currentMatch.scoreP1++;
-            currentMatch.roundWinner = 'p1'; // Você defendeu (Sua torcida vibra)
+            currentMatch.roundWinner = 'p1'; // Você defendeu -> Sua torcida vibra
         } else {
             currentMatch.scoreCpu++;
-            currentMatch.roundWinner = 'cpu'; // CPU fez gol (Torcida adversária vibra)
+            currentMatch.roundWinner = 'cpu'; // Você tomou gol -> Torcida adversária vibra
         }
     }
 
@@ -508,9 +503,9 @@ function showChampionScreen() {
 function draw() {
     ctx.clearRect(0, 0, c.width, c.height);
     drawField();
-    drawCrowd(); // Agora divide a torcida e as cores corretamente
+    drawCrowd();
     drawNet();
-    drawKeeper();
+    drawKeeper(); // Agora desenha com a cor certa do goleiro
     drawRef();
 
     if (ball.moving || gameState === "WAIT_JUIZ" || gameState === "PLAY") {
@@ -548,7 +543,7 @@ function drawCrowd() {
             const isP1Side = cl < cols / 2;
             const team = isP1Side ? currentMatch.p1 : currentMatch.cpu;
 
-            // Seleção de Cores Fiéis
+            // Seleção de Cores Fiéis da Torcida
             let color;
             if (team.crowdColors && team.crowdColors.length > 0) {
                 const colorIndex = (cl + r) % team.crowdColors.length;
@@ -568,12 +563,12 @@ function drawCrowd() {
                 else if (currentMatch.roundWinner === 'cpu' && !isP1Side) {
                     bounce = Math.sin(globalTime * 0.8 + cl) * 8; // Pulo alto e rápido
                 }
-                // Lado perdedor fica "triste" (quase parado)
+                // Lado perdedor fica quieto
                 else {
                     bounce = Math.sin(globalTime * 0.05 + r) * 1;
                 }
             } else {
-                // Durante o jogo (torcida ansiosa)
+                // Durante o jogo
                 bounce = Math.sin(globalTime * 0.1 + r + cl) * 2;
             }
 
@@ -645,8 +640,13 @@ function drawHuman(x, y, color1, color2, scale, isKeeper, animState) {
 }
 
 function drawKeeper() {
+    // --- CORREÇÃO DO UNIFORME DE GOLEIRO ---
     const activeKeeper = Tournament.playerRole === 'player' ? currentMatch.cpu : currentMatch.p1;
-    drawHuman(keeper.x, keeper.y + 25, activeKeeper.color1, activeKeeper.color2, 0.8, true, keeper.animState);
+    // Usa as cores de goleiro (keeperColor1/2) se existirem, senão usa padrão
+    const kColor1 = activeKeeper.keeperColor1 || '#888888';
+    const kColor2 = activeKeeper.keeperColor2 || '#000000';
+    
+    drawHuman(keeper.x, keeper.y + 25, kColor1, kColor2, 0.8, true, keeper.animState);
 }
 
 function drawRef() {
