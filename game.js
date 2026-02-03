@@ -15,57 +15,84 @@ const screens = {
 const hudEls = {
     p1Name: document.getElementById("team-name-p1"),
     p1Score: document.getElementById("gols-p1"),
+    p1Logo: document.getElementById("logo-p1"),
     cpuName: document.getElementById("team-name-cpu"),
     cpuScore: document.getElementById("gols-cpu"),
+    cpuLogo: document.getElementById("logo-cpu"),
     round: document.getElementById("round"),
     stage: document.getElementById("match-stage-hud"),
     feedback: document.getElementById("feedback-msg")
 };
 
-const hubElsDom = { // Renomeado para evitar conflito
+const hubElsDom = {
     stageName: document.getElementById("stage-name"),
     p1: document.getElementById("hub-p1"),
     cpu: document.getElementById("hub-cpu"),
+    p1Img: document.getElementById("hub-img-p1"),
+    cpuImg: document.getElementById("hub-img-cpu"),
     standingsBody: document.getElementById("standings-body"),
     standingsBox: document.getElementById("standings-box"),
     bracketBox: document.getElementById("bracket-box"),
     bracketList: document.getElementById("bracket-list")
 };
 
-/* ================= 32 TIMES ================= */
+// --- FUNÇÃO MÁGICA PARA DESTRAVAR IMAGENS ---
+function getSafeLogo(url) {
+    if (!url) return '';
+    const cleanUrl = url.replace(/^https?:\/\//, '');
+    return `https://images.weserv.nl/?url=${cleanUrl}&w=120&h=120&output=png&il`;
+}
+
+/* ================= TIMES, ESCUDOS E CORES DA TORCIDA ================= */
+// Mantive os links EXATOS que você forneceu
 const TEAMS = [
-    { id: 'fla', name: 'FLA', color1: '#C8102E', color2: '#000000' },
-    { id: 'pal', name: 'PAL', color1: '#006437', color2: '#FFFFFF' },
-    { id: 'spfc', name: 'SAO', color1: '#FE0000', color2: '#FFFFFF' },
-    { id: 'cor', name: 'COR', color1: '#000000', color2: '#FFFFFF' },
-    { id: 'vas', name: 'VAS', color1: '#000000', color2: '#FFFFFF' },
-    { id: 'flu', name: 'FLU', color1: '#9F022D', color2: '#00913C' },
-    { id: 'bot', name: 'BOT', color1: '#000000', color2: '#FFFFFF' },
-    { id: 'san', name: 'SAN', color1: '#FFFFFF', color2: '#000000' },
-    { id: 'gre', name: 'GRE', color1: '#0D80BF', color2: '#000000' },
-    { id: 'int', name: 'INT', color1: '#E30613', color2: '#FFFFFF' },
-    { id: 'cam', name: 'CAM', color1: '#000000', color2: '#FFFFFF' },
-    { id: 'cru', name: 'CRU', color1: '#0054A6', color2: '#FFFFFF' },
-    { id: 'bah', name: 'BAH', color1: '#003194', color2: '#F02328' },
-    { id: 'vit', name: 'VIT', color1: '#E61812', color2: '#000000' },
-    { id: 'for', name: 'FOR', color1: '#115EAC', color2: '#E61812' },
-    { id: 'cea', name: 'CEA', color1: '#000000', color2: '#FFFFFF' },
-    { id: 'spo', name: 'SPO', color1: '#E30613', color2: '#000000' },
-    { id: 'cap', name: 'CAP', color1: '#E61812', color2: '#000000' },
-    { id: 'cfc', name: 'CFC', color1: '#005334', color2: '#FFFFFF' },
-    { id: 'goi', name: 'GOI', color1: '#005F36', color2: '#FFFFFF' },
-    { id: 'vil', name: 'VIL', color1: '#E30613', color2: '#FFFFFF' },
-    { id: 'pay', name: 'PAY', color1: '#0091CF', color2: '#FFFFFF' },
-    { id: 'bGT', name: 'RBB', color1: '#D30F15', color2: '#FFFFFF' },
-    { id: 'cui', name: 'CUI', color1: '#018036', color2: '#FDE900' },
-    { id: 'ame', name: 'AME', color1: '#038E46', color2: '#000000' },
-    { id: 'juv', name: 'JUV', color1: '#038E46', color2: '#FFFFFF' },
-    { id: 'ava', name: 'AVA', color1: '#00679A', color2: '#FFFFFF' },
-    { id: 'fig', name: 'FIG', color1: '#000000', color2: '#FFFFFF' },
-    { id: 'cha', name: 'CHA', color1: '#009B3A', color2: '#FFFFFF' },
-    { id: 'cri', name: 'CRI', color1: '#FDD116', color2: '#000000' },
-    { id: 'pon', name: 'PON', color1: '#000000', color2: '#FFFFFF' },
-    { id: 'gua', name: 'GUA', color1: '#038E46', color2: '#FFFFFF' }
+    // RIO DE JANEIRO
+    { id: 'fla', name: 'FLA', color1: '#C8102E', color2: '#000000', crowdColors: ['#C8102E', '#000000'], logo: 'https://upload.wikimedia.org/wikipedia/commons/9/93/Flamengo-RJ_%28BRA%29.png' },
+    { id: 'vas', name: 'VAS', color1: '#000000', color2: '#FFFFFF', crowdColors: ['#000000', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/pt/8/8b/EscudoDoVascoDaGama.svg' },
+    { id: 'flu', name: 'FLU', color1: '#9F022D', color2: '#00913C', crowdColors: ['#9F022D', '#00913C', '#FFFFFF'], logo: 'upload.wikimedia.org/wikipedia/commons/a/ad/Fluminense_FC_escudo.png' },
+    { id: 'bot', name: 'BOT', color1: '#000000', color2: '#FFFFFF', crowdColors: ['#000000', '#FFFFFF'], logo: 'upload.wikimedia.org/wikipedia/commons/5/52/Botafogo_de_Futebol_e_Regatas_logo.svg' },
+
+    // SÃO PAULO
+    { id: 'spfc', name: 'SAO', color1: '#FFFFFF', color2: '#000000', crowdColors: ['#FF0000', '#FFFFFF', '#000000'], logo: 'upload.wikimedia.org/wikipedia/commons/6/6f/Brasao_do_Sao_Paulo_Futebol_Clube.svg' },
+    { id: 'pal', name: 'PAL', color1: '#006437', color2: '#FFFFFF', crowdColors: ['#006437', '#FFFFFF'], logo: 'upload.wikimedia.org/wikipedia/commons/1/10/Palmeiras_logo.svg' },
+    { id: 'cor', name: 'COR', color1: '#FFFFFF', color2: '#000000', crowdColors: ['#FFFFFF', '#000000'], logo: 'https://upload.wikimedia.org/wikipedia/pt/b/b4/Corinthians_simbolo.png' },
+    { id: 'san', name: 'SAN', color1: '#FFFFFF', color2: '#000000', crowdColors: ['#FFFFFF', '#000000'], logo: 'upload.wikimedia.org/wikipedia/commons/3/35/Santos_logo.svg' },
+    { id: 'bGT', name: 'RBB', color1: '#FFFFFF', color2: '#D30F15', crowdColors: ['#D30F15', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/pt/9/9e/RedBullBragantino.png' },
+    { id: 'pon', name: 'PON', color1: '#000000', color2: '#FFFFFF', crowdColors: ['#000000', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/b/bd/Associa%C3%A7%C3%A3o_Atl%C3%A9tica_Ponte_Preta_logo.png' },
+    { id: 'gua', name: 'GUA', color1: '#038E46', color2: '#FFFFFF', crowdColors: ['#038E46', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/e/ec/Guarani_FC_-_SP.svg' },
+
+    // RIO GRANDE DO SUL
+    { id: 'gre', name: 'GRE', color1: '#0D80BF', color2: '#000000', crowdColors: ['#0D80BF', '#000000', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/0/08/Gremio_logo.svg' },
+    { id: 'int', name: 'INT', color1: '#E30613', color2: '#FFFFFF', crowdColors: ['#E30613', '#FFFFFF'], logo: 'upload.wikimedia.org/wikipedia/commons/f/f1/Escudo_do_Sport_Club_Internacional.svg' },
+    { id: 'juv', name: 'JUV', color1: '#3cff00b6', color2: '#FFFFFF', crowdColors: ['#3cff00b6', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/5/51/EC_Juventude.svg' },
+
+    // MINAS GERAIS
+    { id: 'cam', name: 'CAM', color1: '#000000', color2: '#FFFFFF', crowdColors: ['#000000', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/2/27/Clube_Atl%C3%A9tico_Mineiro_logo.svg' },
+    { id: 'cru', name: 'CRU', color1: '#0054A6', color2: '#FFFFFF', crowdColors: ['#0054A6', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/9/90/Cruzeiro_Esporte_Clube_%28logo%29.svg' },
+    { id: 'ame', name: 'AME', color1: '#000000', color2: '#038E46', crowdColors: ['#038E46', '#000000'], logo: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Escudo_do_America_Futebol_Clube.svg' },
+
+    // NORDESTE
+    { id: 'bah', name: 'BAH', color1: '#FFFFFF', color2: '#003194', crowdColors: ['#003194', '#FF0000', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/pt/9/90/ECBahia.png' },
+    { id: 'vit', name: 'VIT', color1: '#E61812', color2: '#000000', crowdColors: ['#E61812', '#000000'], logo: 'https://upload.wikimedia.org/wikipedia/commons/1/15/Esporte_Clube_Vit%C3%B3ria_%282024%29.svg' },
+    { id: 'for', name: 'FOR', color1: '#115EAC', color2: '#E61812', crowdColors: ['#115EAC', '#E61812', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/4/40/FortalezaEsporteClube.svg' },
+    { id: 'cea', name: 'CEA', color1: '#000000', color2: '#FFFFFF', crowdColors: ['#000000', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/3/38/Cear%C3%A1_Sporting_Club_logo.svg' },
+    { id: 'spo', name: 'SPO', color1: '#000000', color2: '#E30613', crowdColors: ['#000000', '#E30613'], logo: 'https://upload.wikimedia.org/wikipedia/pt/1/17/Sport_Club_do_Recife.png' },
+
+    // PARANÁ
+    { id: 'cap', name: 'CAP', color1: '#E61812', color2: '#000000', crowdColors: ['#E61812', '#000000'], logo: 'https://upload.wikimedia.org/wikipedia/commons/4/43/Athletico_Paranaense_%28Logo_2019%29.svg' },
+    { id: 'cfc', name: 'CFC', color1: '#FFFFFF', color2: '#005334', crowdColors: ['#005334', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/b/bd/Coritiba_Foot_Ball_Club_logo.svg' },
+
+    // GOIÁS
+    { id: 'goi', name: 'GOI', color1: '#005F36', color2: '#FFFFFF', crowdColors: ['#005F36', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/4/4a/Goi%C3%A1s_Esporte_Clube_logo.svg' },
+    { id: 'vil', name: 'VIL', color1: '#E30613', color2: '#FFFFFF', crowdColors: ['#E30613', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/c/c3/Vila_Nova_Logo_Oficial.svg' },
+
+    // OUTROS
+    { id: 'cui', name: 'CUI', color1: '#018036', color2: '#FDE900', crowdColors: ['#018036', '#FDE900'], logo: 'https://upload.wikimedia.org/wikipedia/commons/8/82/Cuiab%C3%A1_EC.svg' },
+    { id: 'ava', name: 'AVA', color1: '#00679A', color2: '#FFFFFF', crowdColors: ['#00679A', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/8/8c/Ava%C3%AD_Futebol_Clube_logo.svg' },
+    { id: 'fig', name: 'FIG', color1: '#000000', color2: '#FFFFFF', crowdColors: ['#000000', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/pt/7/7b/Figueirense.png' },
+    { id: 'cha', name: 'CHA', color1: '#009B3A', color2: '#FFFFFF', crowdColors: ['#009B3A', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/pt/b/bc/Escudo_de_2018_da_Chapecoense.png' },
+    { id: 'cri', name: 'CRI', color1: '#FDD116', color2: '#000000', crowdColors: ['#FDD116', '#000000', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/commons/6/65/Crici%C3%BAma_Esporte_Clube_logo_%28until_2025%29.svg' },
+    { id: 'pay', name: 'PAY', color1: '#0091CF', color2: '#FFFFFF', crowdColors: ['#0091CF', '#FFFFFF'], logo: 'https://upload.wikimedia.org/wikipedia/pt/6/6c/Paysandu_SC.png' }
 ];
 
 /* ================= LÓGICA DO TORNEIO ================= */
@@ -91,7 +118,7 @@ function stopGameLoop() {
 }
 
 // --- FÍSICA E CONFIGURAÇÕES ---
-let currentMatch = { p1: null, cpu: null, scoreP1: 0, scoreCpu: 0, round: 1, finished: false };
+let currentMatch = { p1: null, cpu: null, scoreP1: 0, scoreCpu: 0, round: 1, finished: false, roundWinner: null }; // Adicionado roundWinner
 const CONFIG = { goalLeft: 60, goalRight: 340, goalTop: 190, penaltyY: 550 };
 let gameState = "MENU";
 let ball = { x: 200, y: CONFIG.penaltyY, z: 0, vx: 0, vy: 0, vz: 0, curve: 0, scale: 1, moving: false, rotation: 0 };
@@ -101,27 +128,13 @@ let feedbackTimer = 0;
 let shakeAmount = 0;
 let aimX = 200;
 let inputActive = false;
-let globalTime = 0; // Para animação da torcida
+let globalTime = 0;
 
-// --- FÍSICA CALIBRADA ---
 function getLockedPhysics() {
     let speedY, speedX, margin;
-
-    if (Tournament.stage === 'groups') {
-        speedY = -6.5;
-        speedX = 0.025;
-        margin = 85;
-    }
-    else if (Tournament.stage === 'sf' || Tournament.stage === 'final') {
-        speedY = -9.5;
-        speedX = 0.033;
-        margin = 30;
-    }
-    else {
-        speedY = -8.0;
-        speedX = 0.029;
-        margin = 55;
-    }
+    if (Tournament.stage === 'groups') { speedY = -6.5; speedX = 0.025; margin = 85; }
+    else if (Tournament.stage === 'sf' || Tournament.stage === 'final') { speedY = -9.5; speedX = 0.033; margin = 30; }
+    else { speedY = -8.0; speedX = 0.029; margin = 55; }
     return { y: speedY, x: speedX, cpuMargin: margin };
 }
 
@@ -136,16 +149,26 @@ function goToTeamSelect() { renderTeamGrid(); switchScreen('teamSelect'); }
 function backToMenu() { switchScreen('menu'); }
 function backToTeamSelect() { switchScreen('teamSelect'); }
 
+// --- RENDERIZAÇÃO DA SELEÇÃO ---
 function renderTeamGrid() {
     const grid = document.getElementById('teams-grid');
     grid.innerHTML = '';
     TEAMS.forEach(t => {
         const div = document.createElement('div');
         div.className = 'team-card';
-        div.innerHTML = `<div class="team-flag" style="background: linear-gradient(135deg, ${t.color1} 50%, ${t.color2} 50%)"></div><div class="team-name-card">${t.name}</div>`;
+        const safeLogo = getSafeLogo(t.logo);
+        div.innerHTML = `
+            <div class="team-flag-wrapper" style="width:40px; height:40px; margin-bottom:8px; display:flex; justify-content:center; align-items:center;">
+                <img src="${safeLogo}" class="team-flag-img" style="max-width:100%; max-height:100%;" 
+                onerror="this.style.display='none'; this.parentNode.style.backgroundColor='${t.color1}'; this.parentNode.style.borderRadius='50%'; this.parentNode.style.border='2px solid ${t.color2}'; this.parentNode.innerHTML='<span style=\\'color:#fff; font-weight:bold; font-size:10px; text-shadow:1px 1px 0 #000\\'>${t.name}</span>'">
+            </div>
+            <div class="team-name-card">${t.name}</div>
+        `;
         div.onclick = () => {
             Tournament.playerTeam = t;
             document.getElementById('selected-team-display').textContent = t.name;
+            const bigSafeLogo = getSafeLogo(t.logo);
+            document.getElementById('selected-team-logo-big').innerHTML = `<img src="${bigSafeLogo}" style="width:80px; height:80px; object-fit:contain;" onerror="this.style.display='none'">`;
             switchScreen('roleSelect');
         };
         grid.appendChild(div);
@@ -159,23 +182,17 @@ function initTournament(role) {
     Tournament.groupMatchIndex = 0;
     Tournament.standings = {};
     Tournament.bracketMatches = [];
-
     TEAMS.forEach(t => { Tournament.standings[t.id] = { points: 0, wins: 0, losses: 0, played: 0 }; });
-
     let shuffled = [...TEAMS].sort(() => 0.5 - Math.random());
     Tournament.groups = [];
     for (let i = 0; i < 8; i++) Tournament.groups.push(shuffled.slice(i * 4, i * 4 + 4));
-
-    Tournament.groups.forEach((g, i) => {
-        if (g.find(t => t.id === Tournament.playerTeam.id)) Tournament.groupIndex = i;
-    });
+    Tournament.groups.forEach((g, i) => { if (g.find(t => t.id === Tournament.playerTeam.id)) Tournament.groupIndex = i; });
     updateTournamentHub();
 }
 
 function updateTournamentHub() {
     switchScreen('hub');
     const myGroup = Tournament.groups[Tournament.groupIndex];
-
     if (Tournament.stage === 'groups') {
         hubElsDom.stageName.textContent = `FASE DE GRUPOS - JOGO ${Tournament.groupMatchIndex + 1}/3`;
         hubElsDom.standingsBox.style.display = "block";
@@ -185,7 +202,7 @@ function updateTournamentHub() {
         const nextOpponent = opponents[Tournament.groupMatchIndex];
         setupMatch(Tournament.playerTeam, nextOpponent);
     } else {
-        let stageTitle = "";
+        let stageTitle = "MATA-MATA";
         if (Tournament.stage === 'r16') stageTitle = "OITAVAS DE FINAL";
         if (Tournament.stage === 'qf') stageTitle = "QUARTAS DE FINAL";
         if (Tournament.stage === 'sf') stageTitle = "SEMIFINAL";
@@ -228,16 +245,26 @@ function renderBracket() {
 function setupMatch(p1, cpu) {
     if (p1.id !== Tournament.playerTeam.id) { currentMatch.p1 = cpu; currentMatch.cpu = p1; }
     else { currentMatch.p1 = p1; currentMatch.cpu = cpu; }
-    hubElsDom.p1.textContent = currentMatch.p1.name; hubElsDom.p1.style.color = currentMatch.p1.color1;
-    hubElsDom.cpu.textContent = currentMatch.cpu.name; hubElsDom.cpu.style.color = currentMatch.cpu.color1;
+    hubElsDom.p1.textContent = currentMatch.p1.name;
+    hubElsDom.p1Img.src = getSafeLogo(currentMatch.p1.logo);
+    hubElsDom.cpu.textContent = currentMatch.cpu.name;
+    hubElsDom.cpuImg.src = getSafeLogo(currentMatch.cpu.logo);
 }
 
 function startMatchFromHub() {
     stopGameLoop();
     currentMatch.scoreP1 = 0; currentMatch.scoreCpu = 0; currentMatch.round = 1; currentMatch.finished = false;
+    currentMatch.roundWinner = null;
     switchScreen('hud'); c.style.display = 'block';
-    hudEls.p1Name.textContent = currentMatch.p1.name; hudEls.p1Name.style.color = currentMatch.p1.color1;
-    hudEls.cpuName.textContent = currentMatch.cpu.name; hudEls.cpuName.style.color = currentMatch.cpu.color1;
+
+    hudEls.p1Name.textContent = currentMatch.p1.name;
+    hudEls.p1Logo.src = getSafeLogo(currentMatch.p1.logo);
+    hudEls.p1Logo.onerror = function () { this.style.display = 'none'; };
+
+    hudEls.cpuName.textContent = currentMatch.cpu.name;
+    hudEls.cpuLogo.src = getSafeLogo(currentMatch.cpu.logo);
+    hudEls.cpuLogo.onerror = function () { this.style.display = 'none'; };
+
     hudEls.stage.textContent = Tournament.stage === 'groups' ? "GRUPOS" : "MATA-MATA";
     resetPenaltyRound();
     loop();
@@ -371,16 +398,31 @@ function checkResult() {
     ball.moving = false;
     let result = "";
     const inGoal = ball.x > CONFIG.goalLeft && ball.x < CONFIG.goalRight;
-    const save = Math.abs(ball.x - keeper.x) < 35;
+    const save = Math.abs(ball.x - keeper.x) < 30;
 
     if (!inGoal) { result = "FORA"; showFeedback("PRA FORA!", "#ff5252"); }
     else if (save) { result = "DEFESA"; showFeedback("DEFENDEU!", "#ff9800"); playSound('save'); }
     else { result = "GOL"; showFeedback("GOOOOL!", "#ffeb3b"); shakeAmount = 20; playSound('goal'); }
 
+    // --- LÓGICA DE VIBRAÇÃO DA TORCIDA ---
     if (Tournament.playerRole === 'player') {
-        if (result === "GOL") currentMatch.scoreP1++; else currentMatch.scoreCpu++;
+        // MODO ARTILHEIRO
+        if (result === "GOL") {
+            currentMatch.scoreP1++;
+            currentMatch.roundWinner = 'p1'; // Player Fez gol (Sua torcida vibra)
+        } else {
+            currentMatch.scoreCpu++;
+            currentMatch.roundWinner = 'cpu'; // CPU defendeu (Torcida adversária vibra)
+        }
     } else {
-        if (result === "DEFESA" || result === "FORA") currentMatch.scoreP1++; else currentMatch.scoreCpu++;
+        // MODO PAREDÃO (GOLEIRO)
+        if (result === "DEFESA" || result === "FORA") {
+            currentMatch.scoreP1++;
+            currentMatch.roundWinner = 'p1'; // Você defendeu (Sua torcida vibra)
+        } else {
+            currentMatch.scoreCpu++;
+            currentMatch.roundWinner = 'cpu'; // CPU fez gol (Torcida adversária vibra)
+        }
     }
 
     gameState = "RESULT";
@@ -398,18 +440,9 @@ function endMatch() {
         if (playerWon) { updateStats(currentMatch.p1.id, 3, 1, 0); updateStats(currentMatch.cpu.id, 0, 0, 1); }
         else if (isDraw) { updateStats(currentMatch.p1.id, 1, 0, 0); updateStats(currentMatch.cpu.id, 1, 0, 0); }
         else { updateStats(currentMatch.p1.id, 0, 0, 1); updateStats(currentMatch.cpu.id, 3, 1, 0); }
-
-        const myGroup = Tournament.groups[Tournament.groupIndex];
-        const others = myGroup.filter(t => t.id !== currentMatch.p1.id && t.id !== currentMatch.cpu.id);
-        if (others.length === 2) {
-            const winner = Math.random() > 0.5 ? others[0] : others[1];
-            updateStats(winner.id, 3, 1, 0); updateStats(winner === others[0] ? others[1].id : others[0].id, 0, 0, 1);
-        }
-
         Tournament.groupMatchIndex++;
         if (Tournament.groupMatchIndex >= 3) endGroupStage();
         else updateTournamentHub();
-
     } else {
         if (playerWon) advanceKnockout();
         else showGameOver("Você perdeu nos pênaltis.");
@@ -433,7 +466,6 @@ function endGroupStage() {
         });
         qualifiedTeams.push(group[0], group[1]);
     });
-
     const playerQualified = qualifiedTeams.find(t => t.id === Tournament.playerTeam.id);
     if (playerQualified) {
         Tournament.stage = 'r16';
@@ -454,40 +486,33 @@ function advanceKnockout() {
     const stages = ['r16', 'qf', 'sf', 'final'];
     const currentIdx = stages.indexOf(Tournament.stage);
     if (Tournament.stage === 'final') { showChampionScreen(); return; }
-
     let nextRoundTeams = [Tournament.playerTeam];
     Tournament.bracketMatches.forEach(match => {
         if (match.t1.id !== Tournament.playerTeam.id && match.t2.id !== Tournament.playerTeam.id) {
             nextRoundTeams.push(Math.random() > 0.5 ? match.t1 : match.t2);
         }
     });
-
     Tournament.stage = stages[currentIdx + 1];
     generateBracket(nextRoundTeams);
     updateTournamentHub();
 }
 
 function showGameOver(reason) { switchScreen('gameOver'); document.getElementById('elimination-reason').textContent = reason; }
-function showChampionScreen() { switchScreen('champion'); document.getElementById('champion-team').textContent = Tournament.playerTeam.name; playSound('goal'); }
+function showChampionScreen() {
+    switchScreen('champion');
+    document.getElementById('champion-team').textContent = Tournament.playerTeam.name;
+    document.getElementById('champion-logo').src = getSafeLogo(Tournament.playerTeam.logo);
+    playSound('goal');
+}
 
-// --- RENDERIZAÇÃO MELHORADA ---
 function draw() {
     ctx.clearRect(0, 0, c.width, c.height);
-
-    // 1. O Campo vem PRIMEIRO (fundo)
     drawField();
-
-    // 2. A Torcida vem EM CIMA do fundo (mas atrás do gol)
-    drawCrowd();
-
-    // 3. Rede e Traves
+    drawCrowd(); // Agora divide a torcida e as cores corretamente
     drawNet();
+    drawKeeper();
+    drawRef();
 
-    // 4. Jogadores
-    drawKeeper(); // Goleiro com uniforme
-    drawRef();    // Juiz com uniforme
-
-    // 5. Bola e Sombras
     if (ball.moving || gameState === "WAIT_JUIZ" || gameState === "PLAY") {
         ctx.fillStyle = "rgba(0,0,0,0.3)";
         const shadowScale = ball.scale * 1.2;
@@ -497,7 +522,6 @@ function draw() {
     }
     drawBall();
 
-    // 6. Mira do jogador
     if (Tournament.playerRole === 'player' && gameState === "PLAY" && !ball.moving && inputActive) {
         ctx.strokeStyle = "rgba(255,255,255,0.5)";
         ctx.lineWidth = 3;
@@ -507,97 +531,85 @@ function draw() {
     }
 }
 
+// --- TORCIDA DIVIDIDA E INTELIGENTE ---
 function drawCrowd() {
-    // DESENHAR ARQUIBANCADA (Fundo Escuro)
-    // Para não ficar torcida flutuando na grama, pintamos o topo de cinza
-    ctx.fillStyle = "#1a1a1a";
+    ctx.fillStyle = "#111";
     ctx.fillRect(0, 0, c.width, CONFIG.goalTop - 10);
 
-    // Desenha as "pessoas"
     const rows = 6;
     const cols = 25;
-    const startY = 70; // Empurrei um pouco para baixo para sair debaixo do placar
+    const startY = 70;
     const spacingX = c.width / cols;
     const spacingY = 16;
 
     for (let r = 0; r < rows; r++) {
         for (let cl = 0; cl < cols; cl++) {
-            // Escolhe time baseado na posição
-            const isP1 = cl < cols / 2;
-            const team = isP1 ? currentMatch.p1 : currentMatch.cpu;
-            const color = Math.random() > 0.5 ? team.color1 : team.color2;
+            // Lógica de Divisão: Lado Esquerdo = P1, Lado Direito = CPU
+            const isP1Side = cl < cols / 2;
+            const team = isP1Side ? currentMatch.p1 : currentMatch.cpu;
 
-            // Animação de "pulo"
+            // Seleção de Cores Fiéis
+            let color;
+            if (team.crowdColors && team.crowdColors.length > 0) {
+                const colorIndex = (cl + r) % team.crowdColors.length;
+                color = team.crowdColors[colorIndex];
+            } else {
+                color = Math.random() > 0.5 ? team.color1 : team.color2;
+            }
+
+            // Lógica de Vibração (Quem comemora?)
             let bounce = 0;
             if (gameState === "RESULT") {
-                // Torcida comemora se for gol
-                bounce = Math.sin(globalTime * 0.5 + cl) * 5;
+                // Se P1 ganhou o lance (Gol ou Defesa), só lado esquerdo vibra
+                if (currentMatch.roundWinner === 'p1' && isP1Side) {
+                    bounce = Math.sin(globalTime * 0.8 + cl) * 8; // Pulo alto e rápido
+                }
+                // Se CPU ganhou o lance (Gol ou Defesa), só lado direito vibra
+                else if (currentMatch.roundWinner === 'cpu' && !isP1Side) {
+                    bounce = Math.sin(globalTime * 0.8 + cl) * 8; // Pulo alto e rápido
+                }
+                // Lado perdedor fica "triste" (quase parado)
+                else {
+                    bounce = Math.sin(globalTime * 0.05 + r) * 1;
+                }
             } else {
-                // Movimento ambiente
+                // Durante o jogo (torcida ansiosa)
                 bounce = Math.sin(globalTime * 0.1 + r + cl) * 2;
             }
 
             const x = cl * spacingX + 10;
             const y = startY + r * spacingY + bounce;
 
-            // Desenha "pessoa" (círculo simples)
             ctx.fillStyle = color;
-            ctx.beginPath();
-            ctx.arc(x, y, 5, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI * 2); ctx.fill();
         }
     }
 }
 
 function drawField() {
-    // Gramado
     for (let i = 0; i < 12; i++) {
         ctx.fillStyle = i % 2 === 0 ? "#2e7d32" : "#388e3c";
         ctx.fillRect(0, i * (c.height / 12), c.width, c.height / 12);
     }
-
-    // Linhas do campo
-    ctx.strokeStyle = "rgba(255,255,255,0.9)";
-    ctx.lineWidth = 4;
-
-    // Grande área
+    ctx.strokeStyle = "rgba(255,255,255,0.9)"; ctx.lineWidth = 4;
     ctx.strokeRect(40, CONFIG.goalTop, 320, 160);
-    // Pequena área
     ctx.strokeRect(120, CONFIG.goalTop, 160, 60);
-    // Meia lua
     ctx.beginPath(); ctx.arc(200, CONFIG.goalTop + 160, 40, 0, Math.PI, false); ctx.stroke();
-    // Marca do pênalti
     ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(200, CONFIG.penaltyY, 4, 0, Math.PI * 2); ctx.fill();
 }
 
 function drawNet() {
     const shake = (Math.random() - 0.5) * shakeAmount;
     const l = CONFIG.goalLeft + shake, r = CONFIG.goalRight + shake, t = CONFIG.goalTop, d = 35;
-
-    // Traves
     ctx.lineWidth = 5; ctx.strokeStyle = "#ddd"; ctx.lineJoin = "round";
-
-    // Fundo da rede (linhas mais finas)
     ctx.lineWidth = 1; ctx.strokeStyle = "rgba(255,255,255,0.3)";
-
-    // Desenho hexagonal simples da rede
     const netSpacing = 12;
-    for (let x = l; x < r; x += netSpacing) {
-        ctx.beginPath(); ctx.moveTo(x, t); ctx.lineTo(x + (x - 200) * 0.15, t + d); ctx.stroke();
-    }
-    for (let y = 0; y < d; y += 6) {
-        ctx.beginPath();
-        ctx.moveTo(l - (y * 0.2), t + y);
-        ctx.lineTo(r + (y * 0.2), t + y);
-        ctx.stroke();
-    }
-
-    // Traves principais (re-desenho por cima)
+    for (let x = l; x < r; x += netSpacing) { ctx.beginPath(); ctx.moveTo(x, t); ctx.lineTo(x + (x - 200) * 0.15, t + d); ctx.stroke(); }
+    for (let y = 0; y < d; y += 6) { ctx.beginPath(); ctx.moveTo(l - (y * 0.2), t + y); ctx.lineTo(r + (y * 0.2), t + y); ctx.stroke(); }
     ctx.lineWidth = 6; ctx.strokeStyle = "#eee";
-    ctx.beginPath();
-    ctx.moveTo(l, t); ctx.lineTo(r, t); // Travessão
-    ctx.moveTo(l, t); ctx.lineTo(l, t + 600); // Trave Esq
-    ctx.moveTo(r, t); ctx.lineTo(r, t + 600); // Trave Dir
+    ctx.beginPath(); ctx.moveTo(l, t); ctx.lineTo(r, t);
+    ctx.moveTo(l, t); ctx.lineTo(l, t + 600);
+    ctx.moveTo(r, t); ctx.lineTo(r, t + 600);
     ctx.stroke();
 }
 
@@ -605,109 +617,52 @@ function drawHuman(x, y, color1, color2, scale, isKeeper, animState) {
     ctx.save();
     ctx.translate(x, y);
     ctx.scale(scale, scale);
-
-    // Rotação para pulo do goleiro
     if (isKeeper) {
         if (animState === 'dive_left') ctx.rotate(Math.PI / 3.5);
         if (animState === 'dive_right') ctx.rotate(-Math.PI / 3.5);
     }
-
-    // Cabeça
-    ctx.fillStyle = "#d2b48c"; // Pele
-    ctx.beginPath(); ctx.arc(0, -25, 12, 0, Math.PI * 2); ctx.fill();
-
-    // Camisa (Trapézio)
+    ctx.fillStyle = "#d2b48c"; ctx.beginPath(); ctx.arc(0, -25, 12, 0, Math.PI * 2); ctx.fill();
     ctx.fillStyle = color1;
-    ctx.beginPath();
-    ctx.moveTo(-15, -15); ctx.lineTo(15, -15); // Ombros
-    ctx.lineTo(12, 15); ctx.lineTo(-12, 15); // Cintura
-    ctx.fill();
-
-    // Detalhe camisa
-    ctx.fillStyle = color2;
-    ctx.fillRect(-5, -15, 10, 30);
-
-    // Braços (Mangas + Pele)
-    ctx.fillStyle = color1; // Manga
+    ctx.beginPath(); ctx.moveTo(-15, -15); ctx.lineTo(15, -15);
+    ctx.lineTo(12, 15); ctx.lineTo(-12, 15); ctx.fill();
+    ctx.fillStyle = color2; ctx.fillRect(-5, -15, 10, 30);
+    ctx.fillStyle = color1;
     ctx.beginPath(); ctx.arc(-16, -10, 5, 0, Math.PI * 2); ctx.fill();
     ctx.beginPath(); ctx.arc(16, -10, 5, 0, Math.PI * 2); ctx.fill();
-
-    ctx.fillStyle = "#d2b48c"; // Braço Pele
-    // Se for goleiro, braços esticados
-    if (isKeeper && animState !== 'idle') {
-        ctx.fillRect(-22, -25, 6, 20); // Braço Esq cima
-        ctx.fillRect(16, -25, 6, 20);  // Braço Dir cima
-    } else {
-        ctx.fillRect(-20, -10, 6, 20); // Braço Esq baixo
-        ctx.fillRect(14, -10, 6, 20);  // Braço Dir baixo
-    }
-
-    // Luvas (se goleiro)
+    ctx.fillStyle = "#d2b48c";
+    if (isKeeper && animState !== 'idle') { ctx.fillRect(-22, -25, 6, 20); ctx.fillRect(16, -25, 6, 20); }
+    else { ctx.fillRect(-20, -10, 6, 20); ctx.fillRect(14, -10, 6, 20); }
     if (isKeeper) {
         ctx.fillStyle = "#fff";
-        if (animState !== 'idle') {
-            ctx.beginPath(); ctx.arc(-19, -30, 8, 0, Math.PI * 2); ctx.fill();
-            ctx.beginPath(); ctx.arc(19, -30, 8, 0, Math.PI * 2); ctx.fill();
-        } else {
-            ctx.beginPath(); ctx.arc(-17, 12, 6, 0, Math.PI * 2); ctx.fill();
-            ctx.beginPath(); ctx.arc(17, 12, 6, 0, Math.PI * 2); ctx.fill();
-        }
+        if (animState !== 'idle') { ctx.beginPath(); ctx.arc(-19, -30, 8, 0, Math.PI * 2); ctx.fill(); ctx.beginPath(); ctx.arc(19, -30, 8, 0, Math.PI * 2); ctx.fill(); }
+        else { ctx.beginPath(); ctx.arc(-17, 12, 6, 0, Math.PI * 2); ctx.fill(); ctx.beginPath(); ctx.arc(17, 12, 6, 0, Math.PI * 2); ctx.fill(); }
     }
-
-    // Calção
-    ctx.fillStyle = color2; // Cor do time 2 ou branco
-    ctx.fillRect(-13, 15, 26, 12);
-
-    // Pernas
-    ctx.fillStyle = "#d2b48c";
-    ctx.fillRect(-11, 27, 8, 15);
-    ctx.fillRect(3, 27, 8, 15);
-
-    // Meias
-    ctx.fillStyle = color1;
-    ctx.fillRect(-11, 35, 8, 10);
-    ctx.fillRect(3, 35, 8, 10);
-
-    // Chuteiras
-    ctx.fillStyle = "#111";
-    ctx.fillRect(-11, 45, 10, 6);
-    ctx.fillRect(3, 45, 10, 6);
-
+    ctx.fillStyle = color2; ctx.fillRect(-13, 15, 26, 12);
+    ctx.fillStyle = "#d2b48c"; ctx.fillRect(-11, 27, 8, 15); ctx.fillRect(3, 27, 8, 15);
+    ctx.fillStyle = color1; ctx.fillRect(-11, 35, 8, 10); ctx.fillRect(3, 35, 8, 10);
+    ctx.fillStyle = "#111"; ctx.fillRect(-11, 45, 10, 6); ctx.fillRect(3, 45, 10, 6);
     ctx.restore();
 }
 
 function drawKeeper() {
     const activeKeeper = Tournament.playerRole === 'player' ? currentMatch.cpu : currentMatch.p1;
-    // Ajuste de posição Y para o desenho do boneco
-    drawHuman(keeper.x, keeper.y + 20, activeKeeper.color1, activeKeeper.color2, 1, true, keeper.animState);
+    drawHuman(keeper.x, keeper.y + 25, activeKeeper.color1, activeKeeper.color2, 0.8, true, keeper.animState);
 }
 
 function drawRef() {
     const rx = 40, ry = CONFIG.penaltyY - 60;
-    // Juiz: Camisa preta, detalhe amarelo, escala menor
-    drawHuman(rx, ry, "#000", "#ffeb3b", 0.7, false, "idle");
+    drawHuman(rx, ry, "#FDD116", "#000000", 0.7, false, "idle");
 }
 
 function drawBall() {
     if (gameState === "MENU" || gameState === "RESULT" && !ball.moving) return;
-    ctx.save();
-    ctx.translate(ball.x, ball.y);
-    ctx.scale(ball.scale, ball.scale);
-    ctx.rotate(ball.rotation * Math.PI / 180);
-
-    // Bola base
+    ctx.save(); ctx.translate(ball.x, ball.y); ctx.scale(ball.scale, ball.scale); ctx.rotate(ball.rotation * Math.PI / 180);
     ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(0, 0, 10, 0, Math.PI * 2); ctx.fill();
-
-    // Gomos da bola (pentágonos estilizados)
     ctx.fillStyle = "#111";
     ctx.beginPath(); ctx.moveTo(0, -10); ctx.lineTo(4, -5); ctx.lineTo(-4, -5); ctx.fill();
     ctx.beginPath(); ctx.moveTo(-9, 2); ctx.lineTo(-5, 7); ctx.lineTo(-2, 2); ctx.fill();
     ctx.beginPath(); ctx.moveTo(9, 2); ctx.lineTo(5, 7); ctx.lineTo(2, 2); ctx.fill();
-
-    // Brilho
-    ctx.fillStyle = "rgba(255,255,255,0.3)";
-    ctx.beginPath(); ctx.arc(-3, -3, 4, 0, Math.PI * 2); ctx.fill();
-
+    ctx.fillStyle = "rgba(255,255,255,0.3)"; ctx.beginPath(); ctx.arc(-3, -3, 4, 0, Math.PI * 2); ctx.fill();
     ctx.restore();
 }
 
@@ -724,11 +679,7 @@ function playSound(type) {
 }
 
 function loop() {
-    if (c.style.display === 'block') {
-        update();
-        draw();
-        animationFrameId = requestAnimationFrame(loop);
-    }
+    if (c.style.display === 'block') { update(); draw(); animationFrameId = requestAnimationFrame(loop); }
 }
 
 switchScreen('menu');

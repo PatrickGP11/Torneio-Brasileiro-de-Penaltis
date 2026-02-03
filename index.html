@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Torneio Brasileiro Pênaltis 2026</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="shortcut icon" href="assets/icons8-futebol-16.png" type="image/futebol.png">
+    <link rel="shortcut icon" href="https://upload.wikimedia.org/wikipedia/commons/d/d3/Soccerball.svg"
+        type="image/x-icon">
 </head>
 
 <body>
@@ -14,11 +15,11 @@
     <div class="game-container">
 
         <div id="menu" class="screen">
-            <h1 class="title">TORNEIO BRASILEIRO DE PÊNALTIS</h1>
+            <h1 class="title">TORNEIO BRASILEIRO</h1>
             <p class="subtitle">VERSÃO 2026</p>
             <button class="btn-primary" onclick="goToTeamSelect()">NOVA CAMPANHA</button>
             <button class="btn-secondary" onclick="showRanking()">HALL DA FAMA</button>
-            <p style="font-size: 11px; color: #666; margin-top: 20px;">Versão Remasterizada</p>
+            <p style="font-size: 11px; color: #666; margin-top: 20px;">Versão Oficial</p>
         </div>
 
         <div id="team-select" class="screen" style="display: none;">
@@ -30,6 +31,7 @@
         </div>
 
         <div id="role-select" class="screen" style="display: none;">
+            <div id="selected-team-logo-big" style="margin-bottom: 10px;"></div>
             <h2 id="selected-team-display" style="color: #ffeb3b; font-family: 'Russo One';">TIME</h2>
             <p style="color:#aaa; font-size: 13px; margin-bottom: 20px;">Escolha sua função:</p>
             <button class="btn-role" onclick="initTournament('player')"><span>⚽</span> ARTILHEIRO</button>
@@ -53,9 +55,15 @@
             <div id="match-info-card">
                 <p style="font-size: 12px; color: #888; margin-bottom: 5px;">SEU PRÓXIMO CONFRONTO</p>
                 <div class="versus-display">
-                    <span id="hub-p1" style="color:#fff">BRA</span>
+                    <div class="hub-team-block">
+                        <img id="hub-img-p1" class="hub-logo" src="" alt="">
+                        <span id="hub-p1" style="color:#fff">BRA</span>
+                    </div>
                     <span style="color:#555; font-size: 20px;">X</span>
-                    <span id="hub-cpu" style="color:#fff">ARG</span>
+                    <div class="hub-team-block">
+                        <img id="hub-img-cpu" class="hub-logo" src="" alt="">
+                        <span id="hub-cpu" style="color:#fff">ARG</span>
+                    </div>
                 </div>
             </div>
 
@@ -95,6 +103,7 @@
             style="display: none; background: linear-gradient(180deg, #d4af37 0%, #8a6d3b 100%);">
             <div style="font-size: 80px;">🏆</div>
             <h1 class="title" style="color: #fff; text-shadow: 2px 2px 0 #000;">CAMPEÃO!</h1>
+            <img id="champion-logo" src="" style="width: 80px; height: 80px; margin: 20px;">
             <h2 id="champion-team" style="font-size: 30px; color: #fff; margin-top: 10px; font-family: 'Russo One';">SEU
                 TIME</h2>
             <p style="margin-top: 20px; font-size: 14px; font-weight: bold;">VOCÊ CONQUISTOU A TAÇA!</p>
@@ -104,17 +113,21 @@
 
         <div id="hud" style="display: none;">
             <div class="placar-box">
-                <div class="team-score" id="score-p1">
-                    <span id="team-name-p1" style="font-size: 12px;">FLA</span>
+                <div class="team-score-container">
+                    <span id="team-name-p1" class="hud-team-name">FLA</span>
+                    <img id="logo-p1" class="hud-logo-small" src="" alt="">
                     <span id="gols-p1" class="big-num">0</span>
                 </div>
+
                 <div class="timer">
                     <span id="match-stage-hud" style="display:block; margin-bottom:2px; font-size: 9px;">GRUPOS</span>
                     <span id="round" style="color: #fff; font-weight: bold;">1</span>/5
                 </div>
-                <div class="team-score" id="score-cpu">
+
+                <div class="team-score-container">
                     <span id="gols-cpu" class="big-num">0</span>
-                    <span id="team-name-cpu" style="font-size: 12px;">PAL</span>
+                    <img id="logo-cpu" class="hud-logo-small" src="" alt="">
+                    <span id="team-name-cpu" class="hud-team-name">PAL</span>
                 </div>
             </div>
             <div id="feedback-msg"></div>

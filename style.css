@@ -63,7 +63,6 @@ canvas {
     overflow-y: auto;
 }
 
-/* TIPOGRAFIA E BOTÕES */
 .title {
     font-family: 'Russo One', sans-serif;
     font-size: 42px;
@@ -99,8 +98,6 @@ button {
     text-transform: uppercase;
     transition: all 0.1s;
     -webkit-tap-highlight-color: transparent;
-    position: relative;
-    overflow: hidden;
 }
 
 button:active {
@@ -116,7 +113,6 @@ button:active {
     box-shadow: 0 6px 0 #00600f, 0 10px 10px rgba(0, 0, 0, 0.3);
     width: 85%;
     margin-bottom: 12px;
-    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
     border: 1px solid #4caf50;
 }
 
@@ -189,13 +185,12 @@ button:active {
     background: #333;
 }
 
-.team-flag {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 3px solid rgba(255, 255, 255, 0.1);
+.team-flag-img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
     margin-bottom: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5));
 }
 
 .team-name-card {
@@ -205,7 +200,7 @@ button:active {
     letter-spacing: 0.5px;
 }
 
-/* HUB & TABELA */
+/* HUB */
 #match-info-card {
     background: linear-gradient(180deg, #252525 0%, #1a1a1a 100%);
     padding: 20px;
@@ -218,12 +213,25 @@ button:active {
 
 .versus-display {
     font-family: 'Russo One';
-    font-size: 38px;
     display: flex;
     justify-content: center;
-    gap: 25px;
+    gap: 15px;
     align-items: center;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.hub-team-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80px;
+}
+
+.hub-logo {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    margin-bottom: 5px;
+    filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.5));
 }
 
 #standings-table {
@@ -259,10 +267,10 @@ button:active {
     opacity: 0.6;
 }
 
-/* HUD */
+/* HUD - PLACAR NOVO */
 #hud {
     position: absolute;
-    top: 10px;
+    top: 15px;
     left: 0;
     width: 100%;
     pointer-events: none;
@@ -273,20 +281,34 @@ button:active {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(8px);
-    margin: 0 15px;
-    padding: 10px 20px;
+    margin: 0 10px;
+    padding: 8px 15px;
     border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
 }
 
-.team-score {
-    text-align: center;
-    color: #fff;
+.team-score-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 100px;
+    justify-content: center;
+}
+
+.hud-logo-small {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.hud-team-name {
     font-family: 'Russo One';
-    min-width: 60px;
+    font-size: 14px;
+    color: #fff;
+    text-shadow: 1px 1px 0 #000;
 }
 
 .big-num {
@@ -295,6 +317,7 @@ button:active {
     line-height: 1;
     color: #ffeb3b;
     text-shadow: 0 2px 0 #b3a216;
+    margin: 0 5px;
 }
 
 .timer {
@@ -304,8 +327,9 @@ button:active {
     font-weight: bold;
     text-align: center;
     background: rgba(255, 255, 255, 0.1);
-    padding: 4px 10px;
+    padding: 4px 8px;
     border-radius: 4px;
+    min-width: 50px;
 }
 
 #feedback-msg {
