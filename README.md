@@ -1,50 +1,67 @@
-# 🏆 Torneio Brasileiro de Pênaltis
+# Torneio Brasileiro de Pênaltis 2026 ⚽🇧🇷
 
-Um simulador de pênaltis arcade desenvolvido em JavaScript puro (Vanilla JS), inspirado no cenário do futebol brasileiro de 2026. O jogo agora conta com um sistema completo de competição, desde a fase de grupos até a grande final.
+Um simulador de pênaltis estilo arcade desenvolvido em HTML5 Canvas, focado na imersão, física divertida e fidelidade visual aos clubes brasileiros.
 
-## 🕹️ Funcionalidades
+![Status do Projeto](https://img.shields.io/badge/Status-Completo-brightgreen) ![Tech](https://img.shields.io/badge/Tech-HTML5%20%7C%20JS%20%7C%20Canvas-blue)
 
-- **32 Times Brasileiros**: Inclui os principais clubes das Séries A e B com suas cores tradicionais.
-- **Sistema de Torneio Realista**:
-    - **Fase de Grupos**: 8 grupos de 4 times, com 3 rodadas de confrontos.
-    - **Mata-Mata**: Oitavas, Quartas, Semi e Final (estilo Copa do Mundo).
-- **Escolha de Função**: Jogue o torneio inteiro como **Batedor** (focado em precisão) ou como **Goleiro** (focado em reflexos).
-- **Física de Chute Aprimorada**: Curva de bola suavizada para maior controle e variedade de chutes.
-- **Feedback Visual e Sonoro**: Efeitos sonoros para chutes, gols, defesas e apito do juiz, além de vibração de rede (shake effect).
-- **Tela de Campeão**: Comemoração especial com troféu ao vencer a final.
+## 🎮 Funcionalidades Principais
 
-## 🛠️ Tecnologias Utilizadas
+* **32 Times Brasileiros:** Lista completa com escudos reais e paleta de cores autêntica.
+* **Modos de Jogo:**
+    * 👟 **Artilheiro:** Mire, coloque efeito na bola e vença o goleiro.
+    * 🧤 **Paredão:** Controle o goleiro e garanta o zero no placar.
+* **Imersão Visual:**
+    * **Torcida Dinâmica:** A arquibancada é dividida ao meio. Apenas a torcida que ganha o lance (gol ou defesa) vibra e comemora.
+    * **Uniformes Fiéis:** Configuração específica para cores de jogadores de linha e cores exclusivas para goleiros (ex: SPFC com goleiro de preto, Palmeiras com goleiro azul).
+* **Sistema de Campeonato:** Fase de Grupos completa com tabela de classificação, seguida de chaveamento mata-mata até a final.
 
-- **HTML5**: Estrutura das telas e containers.
-- **CSS3**: Estilização, animações de transição e layout responsivo do grid de times.
-- **JavaScript (ES6+)**: Lógica da física da bola, IA do goleiro e motor do torneio.
-- **Canvas API**: Renderização 2D do campo, jogadores e animações.
-- **Web Audio API**: Geração de sons via osciladores (sem necessidade de arquivos de áudio externos).
+## 🛠️ Solução Técnica para Imagens (Escudos)
 
-## 🚀 Como Jogar
+Um dos maiores desafios técnicos em jogos web locais é o bloqueio de **CORS (Cross-Origin Resource Sharing)** e proteção contra **Hotlink** que muitos servidores de imagem (como a Wikipédia) possuem.
 
-1. **Seleção**: Escolha seu time do coração entre os 32 disponíveis.
-2. **Função**: Defina se você quer ser o **Artilheiro** ou o **Paredão**.
-3. **Fase de Grupos**: Vença seus jogos para somar pontos. Apenas os 2 melhores de cada grupo avançam.
-4. **Mata-Mata**: No mata-mata, perder significa ser eliminado. O empate nos pênaltis dá vantagem ao jogador.
-5. **Controles**:
-    - **Mouse/Touch**: Move a mira (Batedor) ou move o goleiro (Goleiro).
-    - **Clique/Tap**: Executa o chute quando o juiz autorizar.
+Para garantir que todos os escudos apareçam sempre, sem erros de carregamento, este projeto implementa uma função de **Proxy de Imagem**:
 
-## 📂 Estrutura de Arquivos
+``javascript
+function getSafeLogo(url) {
+    // Intercepta a URL original da Wikimedia
+    const cleanUrl = url.replace(/^https?:\/\//, '');
+    // Redireciona através do serviço de cache e redimensionamento wsrv.nl
+    return `https://images.weserv.nl/?url=${cleanUrl}&w=120&h=120&output=png&il`;
+}
 
-- `index.html`: Gerenciamento das telas (Menu, Seleção, Hub, Jogo).
-- `style.css`: Identidade visual escura com detalhes em verde e amarelo.
-- `game.js`: O "cérebro" do jogo, contendo a física, as regras do torneio e a renderização.
+Isso garante:
 
-## 📈 Melhorias Futuras (Backlog)
+## 1. Conversão automática de SVG para PNG (melhor compatibilidade com Canvas).
 
-- [ ] Adicionar sistema de "Morte Súbita" em caso de empate real.
-- [ ] Implementar sistema de salvamento (LocalStorage) para continuar o torneio depois.
-- [ ] Adicionar estatísticas de gols marcados e defesas feitas ao longo da campanha.
-- [ ] Multiplayer local (P1 vs P2).
+## 2. Bypass de restrições de segurança de domínio cruzado.
 
----
+## 3. Cache de imagem para carregamento rápido.
+
+## 🚀 Como Executar
+Basta clonar este repositório e abrir o arquivo index.html em qualquer navegador moderno (Chrome, Firefox, Edge, Safari). Não é necessária instalação de dependências ou servidor backend.
+
+## 🎨 Estrutura do Projeto
+
+index.html: Estrutura da interface e containers.
+
+style.css: Estilização da UI, efeitos de vidro (Glassmorphism) e animações.
+
+game.js:
+
+Lógica de física da bola (curva, velocidade).
+
+Renderização do Canvas (desenho vetorial dos jogadores e torcida).
+
+Inteligência Artificial do goleiro e batedor.
+
+Gerenciamento de estado do torneio.
+
+## ⚠️ Créditos e Direitos
+
+As imagens dos escudos são carregadas dinamicamente e pertencem aos seus respectivos clubes.
+
+Este é um projeto de fã para fins de estudo e entretenimento.
+
 ## 👨‍💻 Autor
 
 Desenvolvido por Patrick Gonçalves
