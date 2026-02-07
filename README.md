@@ -1,69 +1,102 @@
-# Torneio Brasileiro de Pênaltis 2026 ⚽🇧🇷
+# ⚽ Torneio Brasileiro 2026 - Ultimate Broadcast
 
-Um simulador de pênaltis estilo arcade desenvolvido em HTML5 Canvas, focado na imersão, física divertida e fidelidade visual aos clubes brasileiros.
+> **A experiência definitiva de pênaltis no navegador.** > Sinta a pressão da torcida, a física da bola e a emoção do mata-mata.
 
-![Status do Projeto](https://img.shields.io/badge/Status-Completo-brightgreen) ![Tech](https://img.shields.io/badge/Tech-HTML5%20%7C%20JS%20%7C%20Canvas-blue)
+O **Torneio Brasileiro 2026** é um jogo de futebol arcade desenvolvido inteiramente com **HTML5 Canvas, CSS3 e Vanilla JavaScript**. O projeto simula uma campanha completa de campeonato, onde cada chute importa e a atmosfera do estádio reage em tempo real ao seu desempenho.
 
-## 🎮 Funcionalidades Principais
+---
 
-* **32 Times Brasileiros:** Lista completa com escudos reais e paleta de cores autêntica.
-* **Modos de Jogo:**
-    * 👟 **Artilheiro:** Mire, coloque efeito na bola e vença o goleiro.
-    * 🧤 **Paredão:** Controle o goleiro e garanta o zero no placar.
-* **Imersão Visual:**
-    * **Torcida Dinâmica:** A arquibancada é dividida ao meio. Apenas a torcida que ganha o lance (gol ou defesa) vibra e comemora.
-    * **Uniformes Fiéis:** Configuração específica para cores de jogadores de linha e cores exclusivas para goleiros (ex: SPFC com goleiro de preto, Palmeiras com goleiro azul).
-* **Sistema de Campeonato:** Fase de Grupos completa com tabela de classificação, seguida de chaveamento mata-mata até a final.
+## ✨ Destaques & Funcionalidades
 
-## 🛠️ Solução Técnica para Imagens (Escudos)
+### 🏟️ Atmosfera Imersiva & "Torcida Viva"
 
-Um dos maiores desafios técnicos em jogos web locais é o bloqueio de **CORS (Cross-Origin Resource Sharing)** e proteção contra **Hotlink** que muitos servidores de imagem (como a Wikipédia) possuem.
+O grande diferencial deste jogo é a **Inteligência da Torcida**. O estádio não é apenas um desenho estático:
+* **Reações Dinâmicas:** A torcida reage a quem está chutando.
+    * **Apoio:** Se é o seu time, eles gritam *"Confia!"*, *"Manda na gaveta!"*.
+    * **Pressão:** Se é o rival, eles tentam zikar: *"Vai isolar!"*, *"Perna de pau!"*.
+* **Balões de Fala (Speech Bubbles):** O estádio "fala" com você através de balões visuais antes e depois dos chutes.
+* **Feedback Visual:** Textos de **"GOL!"** (Amarelo) e **"DEFENDEU!"** (Laranja) explodem especificamente sobre a torcida que está comemorando.
+* **Cores Reais:** A arquibancada se pinta automaticamente com as cores dos clubes em campo.
 
-Para garantir que todos os escudos apareçam sempre, sem erros de carregamento, este projeto implementa uma função de **Proxy de Imagem**:
+### 🎮 Modos de Jogo
 
-``javascript
-function getSafeLogo(url) {
-    // Intercepta a URL original da Wikimedia
-    const cleanUrl = url.replace(/^https?:\/\//, '');
-    // Redireciona através do serviço de cache e redimensionamento wsrv.nl
-    return `https://images.weserv.nl/?url=${cleanUrl}&w=120&h=120&output=png&il`;
+Você escolhe como quer fazer história:
+* **👟 Modo Artilheiro:** Assuma a responsabilidade. Controle a mira, a força e o efeito (curva) da bola para vencer o goleiro.
+* **🧤 Modo Paredão:** Seja o herói. Controle o goleiro, leia o movimento do batedor e faça defesas milagrosas.
+
+### 🏆 Simulação de Campeonato Realista
+
+O jogo não para quando sua partida acaba.
+* **Motor de Simulação:** Um sistema robusto simula **todas as outras partidas** do torneio em segundo plano.
+* **Tabela Viva:** Os times do seu grupo e dos outros grupos somam pontos, vitórias e saldo de gols realistas. Você precisa jogar bem para se classificar!
+* **48 Clubes:** Times de todo o Brasil, com escudos e cores oficiais.
+
+### ⚙️ Física & Mecânicas Avançadas
+
+* **Radar de Velocidade:** Um velocímetro em tempo real mede a potência do seu chute em **km/h**.
+* **Clima Dinâmico:** Partidas podem acontecer sob sol escaldante ou chuvas torrenciais (com raios e vento lateral que afeta a bola).
+* **Power-Ups:**
+    * 🔥 **Super Chute:** Potência máxima e rastro de fogo.
+    * ❄️ **Cavada Master:** O clássico "panenka" com física de flutuação.
+
+### 🔊 Áudio Procedural (Web Audio API)
+
+Esqueça arquivos mp3 pesados. Todo o som é **gerado via código** em tempo real:
+* Sons de chute, trave e rede.
+* Apito do árbitro.
+* **Torcida:** Vaia grave ("Boo") para erros do rival e vibração ("Cheer") para gols.
+
+---
+
+## 🚀 Como Jogar
+
+1.  **Inicie o Jogo:** Abra o arquivo `index.html` no seu navegador.
+2.  **Menu Principal:** Clique em **NOVA CAMPANHA**.
+3.  **Seleção:** Escolha seu time de coração entre os 48 disponíveis.
+4.  **Função:** Decida se será **Artilheiro** ou **Paredão**.
+
+### 🕹️ Controles
+
+| Ação | Como fazer (Mouse/Toque) |
+| :--- | :--- |
+| **Mirar (Chute)** | Mova o cursor/dedo horizontalmente. |
+| **Chutar** | Clique ou solte o toque no momento certo. |
+| **Defender** | Mova o goleiro para os lados antes do chute da CPU. |
+| **Power-Ups** | Clique nos botões laterais (🔥 ou ❄️) antes de chutar. |
+
+---
+
+## 🛠️ Instalação e Estrutura
+
+Não é necessário instalar dependências (Node, npm, etc). O jogo é **Plug & Play**.
+
+1.  Clone este repositório.
+2.  Execute o `index.html`.
+
+**Estrutura de Arquivos:**
+text
+
+`/
+├── index.html   # Estrutura DOM, UI e Telas.
+├── style.css    # Estilização, Animações CSS e Radar.
+└── game.js      # Lógica, Física, Canvas, Áudio e Simulação.`
+
+## 🎨 Personalização
+
+Quer adicionar o time do seu bairro? É fácil. No arquivo game.js, localize a constante TEAMS e adicione:
+
+{ 
+    id: 'meu_time', 
+    name: 'NOME', 
+    color1: '#CorPrincipal', 
+    color2: '#CorSecundaria', 
+    keeperColor1: '#CorGoleiro', 
+    crowdColors: ['#Cor1', '#Cor2'], 
+    logo: 'URL_DA_IMAGEM' 
 }
 
-Isso garante:
+## 📜 Licença
 
-## 1. Conversão automática de SVG para PNG (melhor compatibilidade com Canvas).
+Este projeto é Open Source. Sinta-se livre para usar, modificar e aprender com o código!
 
-## 2. Bypass de restrições de segurança de domínio cruzado.
-
-## 3. Cache de imagem para carregamento rápido.
-
-## 🚀 Como Executar
-Basta clonar este repositório e abrir o arquivo index.html em qualquer navegador moderno (Chrome, Firefox, Edge, Safari). Não é necessária instalação de dependências ou servidor backend.
-
-## 🎨 Estrutura do Projeto
-
-index.html: Estrutura da interface e containers.
-
-style.css: Estilização da UI, efeitos de vidro (Glassmorphism) e animações.
-
-game.js:
-
-Lógica de física da bola (curva, velocidade).
-
-Renderização do Canvas (desenho vetorial dos jogadores e torcida).
-
-Inteligência Artificial do goleiro e batedor.
-
-Gerenciamento de estado do torneio.
-
-## ⚠️ Créditos e Direitos
-
-As imagens dos escudos são carregadas dinamicamente e pertencem aos seus respectivos clubes.
-
-Este é um projeto de fã para fins de estudo e entretenimento.
-
-## 👨‍💻 Autor
-
-Desenvolvido por Patrick Gonçalves
-
-💡 Projeto educacional e interativo em JavaScript
+Desenvolvido com 💻 código e ⚽ paixão.
