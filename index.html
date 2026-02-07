@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Torneio Brasileiro Pênaltis 2026</title>
+    <title>Torneio Brasileiro 2026 - Ultimate Broadcast</title>
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" href="https://upload.wikimedia.org/wikipedia/commons/d/d3/Soccerball.svg"
         type="image/x-icon">
@@ -16,10 +16,10 @@
 
         <div id="menu" class="screen">
             <h1 class="title">TORNEIO DE PÊNALTIS BRASILEIRO</h1>
-            <p class="subtitle">VERSÃO 2026</p>
+            <p class="subtitle">EDITION 2026 FINAL</p>
             <button class="btn-primary" onclick="goToTeamSelect()">NOVA CAMPANHA</button>
             <button class="btn-secondary" onclick="showRanking()">HALL DA FAMA</button>
-            <p style="font-size: 11px; color: #666; margin-top: 20px;">Versão Oficial</p>
+            <p style="font-size: 11px; color: #666; margin-top: 20px;">Versão Definitiva</p>
         </div>
 
         <div id="team-select" class="screen" style="display: none;">
@@ -42,8 +42,7 @@
 
         <div id="ranking-screen" class="screen" style="display: none;">
             <h2 style="color: #ffeb3b;">HALL DA FAMA</h2>
-            <div id="ranking-list"
-                style="width: 90%; height: 60%; overflow-y: auto; background: rgba(255,255,255,0.05); border-radius: 8px; padding: 10px;">
+            <div id="ranking-list">
             </div>
             <button class="btn-secondary" onclick="backToMenu()">VOLTAR</button>
         </div>
@@ -65,26 +64,28 @@
                         <span id="hub-cpu" style="color:#fff">ARG</span>
                     </div>
                 </div>
+                <div id="weather-forecast" style="margin-top:10px; font-size:12px; color:#aaa;">
+                    ☀️ Previsão: Sol
+                </div>
             </div>
 
             <button class="btn-primary" onclick="startMatchFromHub()" style="margin-bottom: 20px;">JOGAR
                 PARTIDA</button>
 
-            <div id="standings-box" style="width: 90%; display: none;">
-                <h4 style="color: #ccc; font-size: 12px; text-align: left; margin-bottom: 5px;">CLASSIFICAÇÃO DO GRUPO
+            <div id="standings-box" style="width: 95%; display: none;">
+                <h4 style="color: #ccc; font-size: 12px; text-align: left; margin-bottom: 8px; margin-left: 5px;">GRUPO
+                    <span id="group-letter">A</span>
                 </h4>
-                <table id="standings-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Time</th>
-                            <th>P</th>
-                            <th>V</th>
-                            <th>D</th>
-                        </tr>
-                    </thead>
-                    <tbody id="standings-body"></tbody>
-                </table>
+                <div class="modern-table-header">
+                    <span>#</span>
+                    <span style="flex-grow:1; text-align:left; padding-left:10px;">CLUBE</span>
+                    <span style="width:30px">P</span>
+                    <span style="width:30px">V</span>
+                    <span style="width:30px">D</span>
+                </div>
+                <div id="standings-body" class="modern-table-body"></div>
+                <p style="font-size:10px; color:#666; margin-top:5px; text-align:left;">* Avançam os 2 primeiros + 8
+                    melhores 3ºs</p>
             </div>
 
             <div id="bracket-box" style="display:none; width: 90%; margin-bottom: 20px;">
@@ -112,25 +113,59 @@
         </div>
 
         <div id="hud" style="display: none;">
-            <div class="placar-box">
-                <div class="team-score-container">
-                    <span id="team-name-p1" class="hud-team-name">FLA</span>
-                    <img id="logo-p1" class="hud-logo-small" src="" alt="">
-                    <span id="gols-p1" class="big-num">0</span>
+            <div class="top-hud-container">
+                <div class="placar-box" id="placar-main">
+                    <div class="team-score-container">
+                        <span id="team-name-p1" class="hud-team-name">FLA</span>
+                        <img id="logo-p1" class="hud-logo-small" src="" alt="">
+                        <span id="gols-p1" class="big-num">0</span>
+                    </div>
+
+                    <div class="timer">
+                        <span id="match-stage-hud"
+                            style="display:block; margin-bottom:2px; font-size: 9px;">GRUPOS</span>
+                        <span id="round" style="color: #fff; font-weight: bold;">1</span>/5
+                    </div>
+
+                    <div class="team-score-container">
+                        <span id="gols-cpu" class="big-num">0</span>
+                        <img id="logo-cpu" class="hud-logo-small" src="" alt="">
+                        <span id="team-name-cpu" class="hud-team-name">PAL</span>
+                    </div>
                 </div>
 
-                <div class="timer">
-                    <span id="match-stage-hud" style="display:block; margin-bottom:2px; font-size: 9px;">GRUPOS</span>
-                    <span id="round" style="color: #fff; font-weight: bold;">1</span>/5
-                </div>
-
-                <div class="team-score-container">
-                    <span id="gols-cpu" class="big-num">0</span>
-                    <img id="logo-cpu" class="hud-logo-small" src="" alt="">
-                    <span id="team-name-cpu" class="hud-team-name">PAL</span>
+                <div class="penalty-dots-wrapper">
+                    <div id="p1-dots" class="dots-row left-align"></div>
+                    <div id="cpu-dots" class="dots-row right-align"></div>
                 </div>
             </div>
+
+            <div id="narrator-box">O juiz apita o início!</div>
+
+            <div id="powerup-container">
+                <button class="pwr-btn" id="btn-fire" onclick="activatePowerUp('fire')">
+                    <span style="font-size:20px">🔥</span><br>SUPER<br>CHUTE
+                </button>
+                <div style="flex-grow:1"></div>
+                <button class="pwr-btn" id="btn-chip" onclick="activatePowerUp('chip')">
+                    <span style="font-size:20px">❄️</span><br>CAVADA<br>MASTER
+                </button>
+            </div>
+
             <div id="feedback-msg"></div>
+            <div id="pressure-vignette"></div>
+            <div id="wind-indicator"
+                style="display:none; position:absolute; top:120px; right:10px; color:#aaa; font-size:10px; background:rgba(0,0,0,0.5); padding:4px 8px; border-radius:4px;">
+                💨 VENTO LATERAL</div>
+
+            <div id="speed-radar" style="display:none;">
+                <span style="font-size:10px; color:#aaa; display:block;">VELOCIDADE</span>
+                <span id="speed-val" style="font-size:24px; color:#00e676; font-weight:bold;">0</span>
+                <span style="font-size:12px; color:#fff;">km/h</span>
+                <div class="speed-bar-bg">
+                    <div id="speed-fill" class="speed-fill"></div>
+                </div>
+            </div>
         </div>
 
         <canvas id="c" width="400" height="800"></canvas>
