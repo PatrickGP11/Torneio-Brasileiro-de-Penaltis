@@ -6,6 +6,18 @@ O **Torneio Brasileiro 2026** é um jogo de futebol arcade desenvolvido inteiram
 
 ---
 
+## ⚖️ Direitos Autorais e Marcas (Disclaimer)
+
+Este projeto foi desenvolvido para fins educacionais e de aprendizado (programação web e game dev).
+
+Escudos e Marcas: Os logotipos (escudos) e nomes dos times de futebol utilizados neste jogo são de propriedade intelectual e marcas registradas dos seus respectivos clubes e associações desportivas.
+
+Uso: As imagens são carregadas diretamente de fontes públicas (Wikimedia Commons/Wikipedia) apenas para fins ilustrativos dentro da simulação.
+
+Sem Afiliação: Este projeto não possui qualquer vínculo oficial, patrocínio ou afiliação com os clubes representados ou com a CBF.
+
+---
+
 ## ✨ Destaques & Funcionalidades
 
 ### 🏟️ Atmosfera Imersiva & "Torcida Viva"
