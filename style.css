@@ -2,7 +2,6 @@
 
 * {
     box-sizing: border-box;
-    /* Garante que padding não quebre o layout */
 }
 
 body {
@@ -12,7 +11,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    /* Ajuste para mobile: dvh se adapta à barra do navegador */
     height: 100vh;
+    height: 100dvh;
     width: 100vw;
     font-family: 'Roboto', sans-serif;
     color: white;
@@ -411,9 +412,11 @@ button:active {
     transition: opacity 0.3s;
 }
 
+/* --- AJUSTE DOS BOTÕES PARA MOBILE --- */
 #powerup-container {
     position: absolute;
-    bottom: 20px;
+    /* Subindo mais para não ser cortado pela barra de navegação */
+    bottom: 50px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -422,6 +425,8 @@ button:active {
     justify-content: space-between;
     pointer-events: auto;
     z-index: 50;
+    /* Garante que fique acima da safe area do iPhone/Android */
+    padding-bottom: env(safe-area-inset-bottom);
 }
 
 .pwr-btn {
