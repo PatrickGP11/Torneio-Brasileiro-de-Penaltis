@@ -111,4 +111,4 @@ Quer adicionar o time do seu bairro? É fácil. No arquivo game.js, localize a c
 
 Este projeto é Open Source. Sinta-se livre para usar, modificar e aprender com o código!
 
-Desenvolvido com 💻 código e ⚽ paixão.
+Desenvolvido por IA e orientado por Patrick Gonçalves, com 💻 código e ⚽ paixão.
